@@ -20,18 +20,13 @@ This single web page can be edited using any editor you want and can be presente
 -->
 
 <!--
-Sections:
-
 To Dos:
-    1. add sections
-        1. movies
-        2. characters
-        3. actors
-        4. gallery
-    2. add references
-        1. About -> second highest grossing
-        2. Top Characters 
-
+aside
+svg
+audio
+video
+figure
+figurecaption
 -->
 <html lang="en">
     <head>
@@ -44,27 +39,30 @@ To Dos:
     <body id="body" bgcolor="#ffe81f" background="https://i.imgur.com/oMPZYjw.png">
         <header>
             <h1>Star Wars</h1>
-            <!-- TODO inser list with links to each section -->
-            <ul>
-            <li><a href="#H1-1">Jump to About</a></li>
-            <li><a href="#H1-2">Jump to Movies</a></li>
-            <li><a href="#H1-3">Jump to Top Characters</a></li>
-            <li><a href="#H1-4">Jump to Gallery</a></li>
-            <li><a href="#H1-6">Jump to End</a></li>
-            <li><a href="#H1-5">Jump to References</a></li>
-            </ul>
+            <nav>
+                <ul>
+                <li><a href="#H1-1">Jump to About</a></li>
+                <li><a href="#H1-2">Jump to Movies</a></li>
+                <li><a href="#H1-3">Jump to Top Characters</a></li>
+                <li><a href="#H1-4">Jump to Gallery</a></li>
+                <li><a href="#H1-6">Jump to End</a></li>
+                <li><a href="#H1-5">Jump to References</a></li>
+                </ul>
+            </nav>
         </header>
 
         <hr>
 
         <main>
-            <h2><a href="#body" id="H1-1">^</a>About</h2>
-            <p id="p about">
-                <a href="https://en.wikipedia.org/wiki/Star_Wars" target="_blank" title="Star Wars Wikipedia">Star Wars</a> is a series of SF movies, along with the franchise it became, about space and space conflict which started with the <a href="https://en.wikipedia.org/wiki/Star_Wars_(film)" target="_blank">1977 film</a> written and directed by George Lucas. Various media contributed to the dimensional growth of the franchise.
-                <br>
-                <br>
-                All 9 films of the <b>Skywalker Saga</b> received nomianation in the Academy Awards. They, along with the 2 anthology films: Rouge One (2016) and Solo (2018) made the franchise the second-highest grossing film franchise of all time.
-            </p>
+            <article id="about">
+                <h2><a href="#body" id="H1-1">^</a>About</h2>
+                <p id="p about">
+                    <a href="https://en.wikipedia.org/wiki/Star_Wars" target="_blank" title="Star Wars Wikipedia">Star Wars</a> is a series of SF movies, along with the franchise it became, about space and space conflict which started with the <a href="https://en.wikipedia.org/wiki/Star_Wars_(film)" target="_blank">1977 film</a> written and directed by George Lucas. Various media contributed to the dimensional growth of the franchise.
+                    <br>
+                    <br>
+                    All 9 films of the <b>Skywalker Saga</b> received nomianation in the Academy Awards. They, along with the 2 anthology films: Rouge One (2016) and Solo (2018) made the franchise the second-highest grossing film franchise of all time.
+                </p>
+            </article>
     
             <hr>
     
@@ -131,7 +129,6 @@ To Dos:
     <!--                     <td>Anthology Film</td> -->
                     </tr>
                 </table>
-                <>
             </div>
     
             <div id="top characters">
@@ -156,7 +153,6 @@ To Dos:
             <div id="gallery">
                 <h2><a href="#body" id="H1-4">^</a>Gallery</h2>
                 <!-- TODO: add more images and a video -->
-                <figure>
                 <img src="https://i.chzbgr.com/full/9418845184/hCA163A8F/man-if-told-republic-now-under-control-dark-lord-sith" alt="SW:AOTC What if I told you that the Republic was now under the control of a dark lord of the sith?" width="274" height="200">
                 <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.redd.it%2Fj4om3q93dc031.jpg&f=1&nofb=1" alt="There are too many of them." width="472" height="200">
                 <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.f-CVrF4SrTY9FGYydqCCiwHaDJ%26pid%3DApi&f=1" alt="So uncivilized" width="470" height="200">
@@ -169,24 +165,29 @@ To Dos:
                 <img src="https://i.imgflip.com/4rozle.jpg" alt="" height="200">
                 <img src="https://i.imgflip.com/47oror.png" alt="This whole operation was your idea" height="200">
                 <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FxTBj0SMyTcs%2Fmaxresdefault.jpg&f=1&nofb=1" alt="Count Dooku's reaction to the order of his death" height="200">
-                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FxTBj0SMyTcs%2Fmaxresdefault.jpg&f=1&nofb=1" alt="Count Dooku's reaction to the order of his death" height="200">
-                </figure>
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FxTBj0SMyTcs%2Fmaxresdefault.jpg&f=1&nofb=1" alt="Count Dooku's reaction to the order of his death" height="200">
                 <img src="" alt="">
             </div>
             
-            <div id="end">
+            <section id="end">
                 <h2><a href="#body" id="H1-6">^</a>End</h2>
-                <section>
-                    <svg height="200" width="200">
-                        <ellipse cx="100" cy="70" rx="85" ry="55" />
-                    </svg>
-                </section>
-            </div>
+                <!-- <svg height="800" width="800"> -->
+                <svg height="400" width="300">
+                    <ellipse cx="150" cy="200" rx="150" ry="100" fill="#ffffff"/>
+                    <text fill="#ffe81f">"I’m one with the Force. The Force is with me."</text>
+                </svg>
+
+                <figure>
+                    <img src="https://starwarsblog.starwars.com/wp-content/uploads/sites/6/2017/05/yoda-dagobah-empire.jpg" alt="Yoda" height="200">
+                    <figcaption>May the Force be with you.</figcaption>
+                </figure>
+                <br>
+            </section>
         </main>
 
         <hr>
 
-        <footer>
+        <section>
             <h2><a href="#body" id="H1-5">^</a>References</h2>
             <!-- TODO: add unordered list-->
             <a href="https://en.wikipedia.org/wiki/Star_Wars">https://en.wikipedia.org/wiki/Star_Wars</a><br>
@@ -194,6 +195,10 @@ To Dos:
             <a href="https://www.w3schools.com/html/default.asp">https://www.w3schools.com/html/default.asp</a><br>
             <br>
             <br>
-        </footer><br>
+        </section><br>
+
+        <footer>
+            <a href="mailto:prie2985@scs.ubbcluj.ro">Send an email</a>
+        </footer>
     </body>
 </html>
