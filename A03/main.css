@@ -1,0 +1,37 @@
+body {
+    background-color: #000000;
+    margin: 0 0;
+}
+
+div {
+    color: white; /* TODO remove later */
+}
+
+.flex-container {
+    display: flex;
+    height: 100%;
+}
+
+
+header {
+    background-color: red; /* TODO remove later */
+    width: 23%;
+    height: 100%;
+}
+
+
+div#main-right {
+    right: 0;
+    position: relative;
+    width: 23%;
+    color: blue;
+}
+
+div#bottom {
+    background-color: rgb(29, 155, 240);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    color: white;
+}
+
