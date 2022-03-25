@@ -13,24 +13,24 @@ document should look approximately 90% as the given web page. No interactivity s
 </head>
 <body>
     <div id="body">
-        <div id="root" class="flex-container">
-            <header class="flex-container">
-                left
-            </header>
-            <main>
-                <div id="main-left">
-                    main-left
-                </div>
-                <div id="main-right">
-                    right
-                </div>
-            </main>
-            <footer>
-                Sample text
-                <div class="flex-container">
-
-                </div>
-            </footer>
+        <div class="flex-container">
+        <header>
+            <!-- TODO -->
+            left
+        </header>
+        <main>
+            <div id="main-left">
+                <!-- TODO -->
+                main-left
+            </div>
+            <div id="main-right">
+                <!-- TODO insert here 3 divs -->
+                right
+            </div>
+            <div id="bottom">
+                Abc text
+            </div>
+        </main>
         </div>
     </div>
 </body>

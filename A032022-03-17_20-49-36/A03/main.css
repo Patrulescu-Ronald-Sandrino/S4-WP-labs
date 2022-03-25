@@ -1,0 +1,109 @@
+body {
+    background-color: #000000;
+    margin: 0 0;
+}
+
+div {
+    color: white;
+}
+
+div#body {
+    
+}
+.flex-container {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    background-color: green;
+    width: 25%;
+    height: 100%;
+}
+
+main {
+    display: inherit;
+    background-color: wheat;
+    width: 100%;
+    height: 100%;
+}
+
+
+div#main-left {
+    background-color: orangered;
+    width: 100%;
+    border: 2px solid rgb(47, 51, 54);
+    box-sizing: border-box;
+    border-bottom: none;
+    border-top: none;
+}
+
+div#main-right {
+    background-color: blue;
+    right: 0;
+    width: 50%;
+    height: inherit;
+}
+
+/*div#main-left {*/
+/*    background-color: red;*/
+/*    width: 77%;*/
+/*    height: 100%;*/
+/*    border: 24px solid black;*/
+/*}*/
+
+/*div#main-right {*/
+/*    background-color: blue;*/
+/*    width: 25%;*/
+/*    height: 100%;*/
+/*}*/
+
+
+div#bottom {
+    background-color: rgb(29, 155, 240);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+div#bottom-text {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    left: 20%;
+    height: auto;
+    padding: 10px 0;
+}
+
+.bottom-text-span {
+    /*font-family: TwitterChirp, sans-serif;*/
+    display: block;
+}
+
+@font-face {
+    font-family: TwitterChirpExtendedHeavy;
+    src: url(https://abs.twimg.com/fonts/v1/chirp-extended-heavy-web.woff2) format('woff2');
+    src: url(https://abs.twimg.com/fonts/v1/chirp-extended-heavy-web.woff) format('woff');
+}
+
+#bottom-text-span-bigger {
+    font-size: 23px;
+}
+
+#a-button {
+}
+
+#bottom-text-buttons-div {
+    display: flex;
+    flex-direction: column;
+    float: right;
+    padding: 10px 0;
+    align-items: center;
+    margin-left: 16px;
+    margin-right: 16px;
+    justify-content: center;
+    -moz-box-pack: center;
+}

@@ -13,8 +13,8 @@ document should look approximately 90% as the given web page. No interactivity s
 </head>
 <body>
     <div id="body">
-        <div id="root" class="flex-container">
-            <header class="flex-container">
+        <div class="flex-container">
+            <header>
                 left
             </header>
             <main>
@@ -24,13 +24,21 @@ document should look approximately 90% as the given web page. No interactivity s
                 <div id="main-right">
                     right
                 </div>
-            </main>
-            <footer>
-                Sample text
-                <div class="flex-container">
-
+                <div id="bottom">
+                    <div id="bottom-text">
+                        <span id="bottom-text-span-bigger" class="bottom-text-span">Don't miss what's happening</span>
+                        <span class="bottom-text-span">People on Twitter are the first to know</span>
+                    </div>
+                    <div id="bottom-text-buttons-div">
+                        <div id="login" class="a-button">
+                            <a>Log in</a>
+                        </div>
+                        <div id="signup" class="a-button">
+                            <a>Sign up</a>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+            </main>
         </div>
     </div>
 </body>

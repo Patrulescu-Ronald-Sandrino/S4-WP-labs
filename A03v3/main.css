@@ -1,0 +1,61 @@
+html, body {
+    color: white;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 0;
+    display: flex;
+    justify-content: stretch;
+}
+
+col {
+    height: 100vh;
+}
+
+header {
+    background-color: purple;
+    width: 24vw;
+    /*height: 100vh;*/
+}
+
+main {
+    background-color: red;
+    width: 43vw;
+}
+
+#left-panel {
+    background-color: green;
+    position: relative;
+    right: 0;
+    width: 33vw;
+}
+
+
+footer {
+    background-color: rgb(29, 155, 240); /* TODO: remove later */
+    position: fixed;
+    left: 0;
+    /*bottom: 0;*/
+    top: 89vh;
+    width: 100vw;
+    height: 11vh;
+    min-height: 11vh;
+}
+
+footer > div {
+    background-color: magenta;
+    position: fixed;
+    bottom: 0;
+    left: 24vw;
+    right: 5vw;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    height: 7vh;
+}
+
+footer > div > span:first-child {
+    font-size: 130%;
+}
+
+footer > div > span:nth-child(2) {
+    margin-bottom: inherit;
+}
