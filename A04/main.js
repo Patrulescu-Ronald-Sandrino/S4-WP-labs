@@ -1,5 +1,46 @@
-let lastSorted = "NONE"
+let lastSorted = "NONE";
+main();
 
+function main() {
+    assignHandlerToTableHeaders();
+}
+
+function assignHandlerToTableHeaders() { // TODO: add parameters table and handler
+    // TODO: for every th assign the function clickedTableHeader(index)
+}
+
+function clickedTableHeader() {
+
+}
+
+function isTableColumnIndexValid(table, columnIndex) {
+    const columnsCount = table.getElementsByTagName("th").length;
+
+    if (columnIndex > columnsCount) {
+        return "Given index: ${0} should be < the # of columns in the given table, i.e. less than ${1}".format(columnIndex, columnsCount); // string format
+    }
+
+    return true;
+}
+
+// returns an Array of all the tds of a column
+function getTableColumn(table, columnIndex) { // getTableColumn(document.getElementById("myTable"), 1);
+    { // check the columnIndex
+        const isTableColumnIndexValidResult = isTableColumnIndexValid(table, columnIndex);
+        if (isTableColumnIndexValidResult !== true) {
+            console.log(isTableColumnIndexValidResult);
+            return;
+        }
+    }
+
+    // document.getElementById("myTable").getElementsByTagName("th")[2] = document.getElementById("myTable").getElementsByTagName("th")[1]
+    // Array.from(document.getElementById("myTable").getElementsByTagName("tr")).slice(1).map(tr => tr.getElementsByTagName("td")[2]).forEach(td => td.innerText = "2")
+    return Array.from(table.getElementsByTagName("tr")).slice(1).map(tr => tr.getElementsByTagName("td")[columnIndex]);
+}
+
+function setTableColumn() {
+
+}
 
 function shouldSwap(currentValueCompared, key) {
     return lastSorted === "ASC"
@@ -8,8 +49,8 @@ function shouldSwap(currentValueCompared, key) {
 }
 
 
-function sortTable(columnIndex) {
-    let array = [2, 1, 4, 2, 5];
+function sortArray(array, sorter) {
+    // let array = [2, 1, 4, 2, 5];
     let length = array.length; // TODO array = document.getElements....
 
     console.log("lastSorted = " + lastSorted);
@@ -46,3 +87,8 @@ function sortTable(columnIndex) {
 // eval("plm += 3");
 //
 // console.log(plm);
+
+
+/* Some references
+    - string format https://www.tutorialstonight.com/javascript-string-format.php
+ */
