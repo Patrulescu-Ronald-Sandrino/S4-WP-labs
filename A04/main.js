@@ -24,27 +24,50 @@ function addColumnSorting(table) {
     for (let tableHeaderIndex = 0; tableHeaderIndex < tableHeadersLength; tableHeaderIndex++) {
         // console.log(tableHeaderIndex, tableHeaders[tableHeaderIndex]); // debug print
         tableHeaders[tableHeaderIndex].addEventListener("click", () => {
-            let comparator = decideSortingAndGetComparator(tableHeaderIndex);
-            let column = getTableColumn(table, tableHeaderIndex);
-            console.log(`[before sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, column);
-            sortArray(column, comparator);
-            console.log(`[after sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, column);
-            setTableColumn(table, tableHeaderIndex, column);
+            // let comparator = decideSortingAndGetComparator(tableHeaderIndex);
+            let comparator = getSorter(tableHeaderIndex);
+            let columnData = arrayValuesToIntOrKeepAsString(getTableColumnData(table, tableHeaderIndex));
+            console.log(`[before sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, columnData);
+            sortArray(columnData, comparator);
+            setLastSorting(tableHeaderIndex);
+            console.log(`[after sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, columnData);
+            setTableColumnData(table, tableHeaderIndex, columnData);
         }, tableHeaderIndex)
     }
 
 }
 
+
+function setLastSorting(index) {
+    lastSortingArray[index] = lastSortingArray[index] === 'ASC' ? 'DESC' : 'ASC';
+}
+
+function isArrayOfNumberStrings(array) {
+    return array.filter(value => /^[+-]?\d+(\.\d+)?/.test(value)).length === array.length;
+}
+
+// /^[+-]?\d+(\.\d+)?/.test();
+function arrayValuesToIntOrKeepAsString(array) {
+    return isArrayOfNumberStrings(array) ? array.map(value => Number(value)) : array;
+}
+
+function getSorter(index) {
+    return lastSortingArray[index] === 'ASC'
+                ? (currentValueCompared, key) => currentValueCompared < key
+                : (currentValueCompared, key) => currentValueCompared > key;
+}
+
+// assumes homogeneous columns
 function decideSortingAndGetComparator(index) { // Does this violate SRP? IDEA: set the value for lastSortingArray[index], after running the sort function
     let comparator;
     if (lastSortingArray[index] === 'ASC') { // last = 'ASC' => now sort DESC
         lastSortingArray[index] = 'DESC';
         // comparator = function (currentValueCompared, key) { return currentValueCompared < key; };
-        comparator = (currentValueCompared, key) => currentValueCompared.innerText < key.innerText;
+        comparator = (currentValueCompared, key) => currentValueCompared < key;
     }
     else { // last = 'DESC' => now sort ASC
         lastSortingArray[index] = 'ASC';
-        comparator = (currentValueCompared, key) => currentValueCompared.innerText > key.innerText;
+        comparator = (currentValueCompared, key) => currentValueCompared > key;
     }
     return comparator;
 }
@@ -67,8 +90,7 @@ function isTableColumnIndexValid(table, columnIndex) {
     return true;
 }
 
-// returns an Array of all the tds of a column
-function getTableColumn(table, columnIndex) { // getTableColumn(document.getElementById('myTable'), 1);
+function getTableColumn(table, columnIndex) {
     { // check the columnIndex
         const isTableColumnIndexValidResult = isTableColumnIndexValid(table, columnIndex);
         if (isTableColumnIndexValidResult !== true) {
@@ -79,10 +101,16 @@ function getTableColumn(table, columnIndex) { // getTableColumn(document.getElem
 
     // document.getElementById('myTable').getElementsByTagName('th')[2] = document.getElementById('myTable').getElementsByTagName('th')[1]
     // Array.from(document.getElementById('myTable').getElementsByTagName('tr')).slice(1).map(tr => tr.getElementsByTagName('td')[2]).forEach(td => td.innerText = '2')
-    return Array.from(table.getElementsByTagName('tr')).slice(1).map(tr => tr.getElementsByTagName('td')[columnIndex].cloneNode(true)); // HTML Collection to Array
+    return Array.from(table.getElementsByTagName('tr')).slice(1).map(tr => tr.getElementsByTagName('td')[columnIndex]); // HTML Collection to Array
+
 }
 
-function setTableColumn(table, columnIndex, newColumn) {
+// returns an Array of all the tds of a column
+function getTableColumnData(table, columnIndex) { // getTableColumnData(document.getElementById('myTable'), 1);
+   return getTableColumn(table, columnIndex).map(td => td.innerText);
+}
+
+function setTableColumnData(table, columnIndex, newColumnData) {
     { // check the columnIndex
         const isTableColumnIndexValidResult = isTableColumnIndexValid(table, columnIndex);
         if (isTableColumnIndexValidResult !== true) {
@@ -92,8 +120,13 @@ function setTableColumn(table, columnIndex, newColumn) {
     }
     let oldColumn = getTableColumn(table, columnIndex);
     for (let rowIndex = 0; rowIndex < oldColumn.length; rowIndex++) {
-        oldColumn[rowIndex].innerText = newColumn[rowIndex].innerText;
+        console.log("[setTableColumnData()] Loop index: " + rowIndex);
+        console.log("[setTableColumnData()] oldColumn[rowIndex] = ", oldColumn[rowIndex]);
+        console.log("[setTableColumnData()] oldColumn[rowIndex].innerText = ", oldColumn[rowIndex].innerText);
+        console.log("[setTableColumnData()] newColumnData[rowIndex] = ", newColumnData[rowIndex]);
+        oldColumn[rowIndex].innerText = newColumnData[rowIndex];
     }
+    console.log("[setTableColumnData()] finished");
 }
 
 
