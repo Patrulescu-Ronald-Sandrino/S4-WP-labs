@@ -1,6 +1,6 @@
 // 'use strict';
 
-let lastSortingArray;
+// let lastSortingArray;
 let log = false;
 
 
@@ -16,20 +16,21 @@ function addColumnSorting(table) {
     let tableHeaders = getTableHeaders(table);
     let tableHeadersLength = tableHeaders.length;
 
-    lastSortingArray = Array(tableHeadersLength).fill('NONE'); // fill array
+    let lastSortingArray = Array(tableHeadersLength).fill('NONE'); // fill array
 
 
     for (let tableHeaderIndex = 0; tableHeaderIndex < tableHeadersLength; tableHeaderIndex++) {
         if (log) console.log(tableHeaderIndex, tableHeaders[tableHeaderIndex]); // debug print
         tableHeaders[tableHeaderIndex].addEventListener("click", () => {
-            let comparator = getSorter(tableHeaderIndex);
+            let comparator = getSorter(lastSortingArray, tableHeaderIndex);
             let columnData = arrayValuesToIntOrKeepAsString(getTableColumnData(table, tableHeaderIndex));
             if (log) console.log(`[before sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, columnData);
             sortArray(columnData, comparator);
-            setLastSorting(tableHeaderIndex);
+            setLastSorting(lastSortingArray, tableHeaderIndex);
             if (log) console.log(`[after sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, columnData);
             setTableColumnData(table, tableHeaderIndex, columnData);
-        }, tableHeaderIndex); // TODO what happens if I don't send the index?
+        }); // TODO what happens if I don't send the index?
+        // }, tableHeaderIndex); // TODO what happens if I don't send the index?
     }
 
 }
@@ -40,7 +41,7 @@ function getTableHeaders(table) {
 }
 
 
-function setLastSorting(index) {
+function setLastSorting(lastSortingArray, index) {
     lastSortingArray[index] = lastSortingArray[index] === 'ASC' ? 'DESC' : 'ASC';
 }
 
@@ -54,7 +55,7 @@ function arrayValuesToIntOrKeepAsString(array) {
 }
 
 
-function getSorter(index) {
+function getSorter(lastSortingArray, index) {
     return lastSortingArray[index] === 'ASC'
                 ? (currentValueCompared, key) => currentValueCompared < key
                 : (currentValueCompared, key) => currentValueCompared > key;
