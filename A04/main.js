@@ -29,8 +29,8 @@ function addColumnSorting(table) {
             setLastSorting(lastSortingArray, tableHeaderIndex);
             if (log) console.log(`[after sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, columnData);
             setTableColumnData(table, tableHeaderIndex, columnData);
-        }); // TODO what happens if I don't send the index?
-        // }, tableHeaderIndex); // TODO what happens if I don't send the index?
+        }); // TODO what happens if I don't send the index as capture?
+        // }, tableHeaderIndex); // TODO what happens if I don't send the index as capture?
     }
 
 }
