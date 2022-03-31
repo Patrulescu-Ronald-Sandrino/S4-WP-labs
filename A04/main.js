@@ -1,30 +1,74 @@
-let lastSorted = "NONE";
+// 'use strict';
+
+let lastSortingArray;
 main();
 
+
 function main() {
-    assignHandlerToTableHeaders();
+    addColumnSorting(document.getElementById("myTable"));
 }
 
-function assignHandlerToTableHeaders() { // TODO: add parameters table and handler
-    // TODO: for every th assign the function clickedTableHeader(index)
+
+function getTableHeaders(table) {
+    return table.getElementsByTagName('th');
+}
+
+
+function addColumnSorting(table) {
+    let tableHeaders = getTableHeaders(table);
+    let tableHeadersLength = tableHeaders.length;
+
+    lastSortingArray = Array(tableHeadersLength).fill('NONE'); // fill array
+
+
+    for (let tableHeaderIndex = 0; tableHeaderIndex < tableHeadersLength; tableHeaderIndex++) {
+        // console.log(tableHeaderIndex, tableHeaders[tableHeaderIndex]); // debug print
+        tableHeaders[tableHeaderIndex].addEventListener("click", () => {
+            let comparator = decideSortingAndGetComparator(tableHeaderIndex);
+            let column = getTableColumn(table, tableHeaderIndex);
+            console.log(`[before sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, column);
+            sortArray(column, comparator);
+            console.log(`[after sort] Index: ${tableHeaderIndex}, lastSortingArray[index]: ${lastSortingArray[tableHeaderIndex]}, Array: `, column);
+            setTableColumn(table, tableHeaderIndex, column);
+        }, tableHeaderIndex)
+    }
+
+}
+
+function decideSortingAndGetComparator(index) { // Does this violate SRP? IDEA: set the value for lastSortingArray[index], after running the sort function
+    let comparator;
+    if (lastSortingArray[index] === 'ASC') { // last = 'ASC' => now sort DESC
+        lastSortingArray[index] = 'DESC';
+        // comparator = function (currentValueCompared, key) { return currentValueCompared < key; };
+        comparator = (currentValueCompared, key) => currentValueCompared.innerText < key.innerText;
+    }
+    else { // last = 'DESC' => now sort ASC
+        lastSortingArray[index] = 'ASC';
+        comparator = (currentValueCompared, key) => currentValueCompared.innerText > key.innerText;
+    }
+    return comparator;
 }
 
 function clickedTableHeader() {
 
 }
 
-function isTableColumnIndexValid(table, columnIndex) {
-    const columnsCount = table.getElementsByTagName("th").length;
+function getTableWidth(table) {
+    return getTableHeaders(table).length;
+}
 
-    if (columnIndex > columnsCount) {
-        return "Given index: ${0} should be < the # of columns in the given table, i.e. less than ${1}".format(columnIndex, columnsCount); // string format
+function isTableColumnIndexValid(table, columnIndex) {
+    const tableWidth = getTableWidth(table);
+
+    if (columnIndex >= tableWidth) {
+        return `Given index: ${columnIndex} should be < the # of columns in the given table, i.e. less than ${tableWidth}` // string format
     }
 
     return true;
 }
 
 // returns an Array of all the tds of a column
-function getTableColumn(table, columnIndex) { // getTableColumn(document.getElementById("myTable"), 1);
+function getTableColumn(table, columnIndex) { // getTableColumn(document.getElementById('myTable'), 1);
     { // check the columnIndex
         const isTableColumnIndexValidResult = isTableColumnIndexValid(table, columnIndex);
         if (isTableColumnIndexValidResult !== true) {
@@ -33,27 +77,30 @@ function getTableColumn(table, columnIndex) { // getTableColumn(document.getElem
         }
     }
 
-    // document.getElementById("myTable").getElementsByTagName("th")[2] = document.getElementById("myTable").getElementsByTagName("th")[1]
-    // Array.from(document.getElementById("myTable").getElementsByTagName("tr")).slice(1).map(tr => tr.getElementsByTagName("td")[2]).forEach(td => td.innerText = "2")
-    return Array.from(table.getElementsByTagName("tr")).slice(1).map(tr => tr.getElementsByTagName("td")[columnIndex]);
+    // document.getElementById('myTable').getElementsByTagName('th')[2] = document.getElementById('myTable').getElementsByTagName('th')[1]
+    // Array.from(document.getElementById('myTable').getElementsByTagName('tr')).slice(1).map(tr => tr.getElementsByTagName('td')[2]).forEach(td => td.innerText = '2')
+    return Array.from(table.getElementsByTagName('tr')).slice(1).map(tr => tr.getElementsByTagName('td')[columnIndex].cloneNode(true)); // HTML Collection to Array
 }
 
-function setTableColumn() {
-
+function setTableColumn(table, columnIndex, newColumn) {
+    { // check the columnIndex
+        const isTableColumnIndexValidResult = isTableColumnIndexValid(table, columnIndex);
+        if (isTableColumnIndexValidResult !== true) {
+            console.log(isTableColumnIndexValidResult);
+            return;
+        }
+    }
+    let oldColumn = getTableColumn(table, columnIndex);
+    for (let rowIndex = 0; rowIndex < oldColumn.length; rowIndex++) {
+        oldColumn[rowIndex].innerText = newColumn[rowIndex].innerText;
+    }
 }
 
-function shouldSwap(currentValueCompared, key) {
-    return lastSorted === "ASC"
-        ? currentValueCompared < key
-        : currentValueCompared > key;
-}
 
-
-function sortArray(array, sorter) {
+function sortArray(array, comparator = (currentValue, key) => currentValue > key) { // sortArray([2, 1, 4, 2, 5], shouldSwap)
+    // https://www.geeksforgeeks.org/insertion-sort/
     // let array = [2, 1, 4, 2, 5];
-    let length = array.length; // TODO array = document.getElements....
-
-    console.log("lastSorted = " + lastSorted);
+    let length = array.length;
 
     for (let i = 1; i < length; i++) {
         let key, j;
@@ -61,17 +108,17 @@ function sortArray(array, sorter) {
         key = array[i];
         j = i - 1;
 
-        while (j >= 0 && shouldSwap(array[j], key)) {
+        while (j >= 0 && comparator(array[j], key)) {
             array[j + 1] = array[j]
             j = j - 1;
         }
         array[j + 1] = key;
     }
-    console.log(array);
+    console.log("[sortArray] Array: ", array);
 }
 
 // var a = [ 'x', 'y', 23 ];
-// a.Test = "foo";
+// a.Test = 'foo';
 // for (i=0; i<a.length; i++) {
 //     console.log(a[i]);
 // }  	// will print: x, y, 23
@@ -84,11 +131,13 @@ function sortArray(array, sorter) {
 // a.forEach(function(elem) { console.log(elem); });  // will print  x, y, 23
 //
 // plm = 2;
-// eval("plm += 3");
+// eval('plm += 3');
 //
 // console.log(plm);
 
 
 /* Some references
+    - fill array https://stackoverflow.com/questions/35578478/array-prototype-fill-with-object-passes-reference-and-not-new-instance
+    - HTML Collection to Array https://stackoverflow.com/questions/68304430/convert-htmlcollection-to-an-array-with-javascript
     - string format https://www.tutorialstonight.com/javascript-string-format.php
  */
