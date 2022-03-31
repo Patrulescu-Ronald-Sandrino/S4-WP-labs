@@ -17,25 +17,21 @@ $(function main() {
     if (log) console.log("[log][main()] ended...");
 })
 
-
-
-
-function intToUpperLetter(value) {
-    return String.fromCharCode('A'.charCodeAt(0) + value % ('Z'.charCodeAt(0) - 'A'.charCodeAt(0) + 1));
-}
-
 function addRowsToTable(tableAsQueryString, numberOfRows, includeFooter = true) {
     if (log) console.log($(tableAsQueryString + " tr"));
     const numberOfColumns = getTableWidth(tableAsQueryString);
     const absoluteIndexOfFirstRowToBeAdded = getTableHeight(tableAsQueryString, true, true);
-    const generateArrayMapFunctionsArray = [index => index + 1,
-            index => Number(index + "." + index),
-            index => intToUpperLetter(index),
-            index => intToUpperLetter(index).toLowerCase()
+    const generateArrayMapFunctionsArray = [(_, index) => index + 1,
+            (_, index) => Number(index + "." + index),
+            (_, index) => intToUpperLetter(index),
+            (_, index) => intToUpperLetter(index).toLowerCase()
     ];
     const generateArrayMapFunctionsArrayLength = generateArrayMapFunctionsArray.length;
 
     // TODO: insert the empty trs into the table
+    doNTimes(numberOfRows, () => {
+        $(tableAsQueryString + getTableDirectChildrenQueryString(includeFooter) + "")
+    });
 
 
 
@@ -43,6 +39,10 @@ function addRowsToTable(tableAsQueryString, numberOfRows, includeFooter = true) 
         const newColumnData = generateArray(numberOfRows, generateArrayMapFunctionsArray[columnIndex % generateArrayMapFunctionsArrayLength]);
         setTableColumnData(tableAsQueryString, columnIndex, newColumnData, false, true);
     }
+}
+
+function intToUpperLetter(value) {
+    return String.fromCharCode('A'.charCodeAt(0) + value % ('Z'.charCodeAt(0) - 'A'.charCodeAt(0) + 1));
 }
 
 function setTableColumnData(tableAsQueryString, columnIndex, newData, includeHeader = false, includeFooter = true) {
@@ -53,11 +53,16 @@ function setTableColumnData(tableAsQueryString, columnIndex, newData, includeHea
 
 // note: this can be easily extended by adding a second parameter - 'includeHeader'
 function getTableDirectChildrenQueryString(includeFooter = true) {
+    // TODO: IDEA: use filter() and not()
     return " tbody" + includeFooter ? ",tfoot" : "";
 }
 
-function getTableColumn(tableAsQueryString, index, includeFooter = true) {
-    return Array.from($(tableAsQueryString + getTableDirectChildrenQueryString(includeFooter)) + " tr");
+// TODO: mind the "td,th"; maybe provide another parameter for allowing/adding ths too
+function getTableColumn(tableAsQueryString, index, includeHeader= false, includeFooter = true) {
+    // return Array.from($(tableAsQueryString + getTableDirectChildrenQueryString(includeFooter)) + " tr");
+    // TODO
+    // TODO replace getTableDirectChildrenQueryString(includeFooter) with filter or find or something like that
+    return $(tableAsQueryString + getTableDirectChildrenQueryString(includeFooter) + " tr").slice(!includeFooter).map(tr => tr.find("td,th").eq(index)).toArray();
 }
 
 // assumes: the width = the number of table headers
@@ -81,9 +86,9 @@ function generateArray(length, mapFunction = (element, index) => index + 1) {
     return Array.from({ length: length}, mapFunction); // https://stackoverflow.com/a/39232049
 }
 
-function doNTimes(N, functionToExecute = function(i) { console.log(i); }) {
+function doNTimes(N, functionToExecute = (i) => { console.log(i); }) {
     for (let i = 0; i < N; i++) {
-        functionToExecute(i = 0);
+        functionToExecute(i);
     }
 }
 
@@ -101,5 +106,6 @@ TODO IDEAs:
 
 /* Refs & others
     - generate array; inspired from https://stackoverflow.com/questions/3751520/how-to-generate-sequence-of-numbers-chars-in-javascript
+    - intToUpperLetter(value); inspired from https://stackoverflow.com/questions/3751520/how-to-generate-sequence-of-numbers-chars-in-javascript
     - libraries (2x Shift and search for this word) https://stackoverflow.com/questions/29097611/webstorm-there-is-no-locally-stored-library
  */
