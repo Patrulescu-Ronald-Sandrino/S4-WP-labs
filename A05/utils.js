@@ -14,6 +14,12 @@ function generateArray(length, mapFunction = (element, index) => index + 1) {
     return Array.from({ length: length}, mapFunction); // source: https://stackoverflow.com/a/39232049
 }
 
+
+function arrayValuesToIntOrKeepAsString(array) {
+    return isArrayOfNumberStrings(array) ? array.map(value => Number(value)) : array;
+}
+
+
 function doNTimes(N, functionToExecute = (i) => { console.log(i); }) {
     for (let i = 0; i < N; i++) {
         functionToExecute(i);

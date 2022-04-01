@@ -11,9 +11,12 @@ $(function main() {
         2. sort whole table based on clicked headers (in same manner as the previous)
         3. interchange columns
      */
-    addRowsToTable("#myTable", 9);
+    const tableAsQueryString = "#myTable";
 
-    $("body").add()
+    addRowsToTable(tableAsQueryString, 9, true);
+    addSortingToTableColumns(tableAsQueryString, generateArray(getTableWidth(tableAsQueryString), (_, index) => index + 1));
+    // TODO: 3.
+
     if (log) console.log("[log][main()] ended...");
 })
 
