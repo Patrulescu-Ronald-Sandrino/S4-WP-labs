@@ -42,27 +42,80 @@ function getTableHeaders(tableAsQueryString) {
     return $(tableAsQueryString + " th");
 }
 
+function addRandomRowsInTable(tableAsQueryString, numberOfRows, tablePart = "tbody") {
+    if (["tbody", "tfoot"].find(value => value === tablePart) === undefined) { return; }
+    if (numberOfRows < 1) { return; }
 
-function addRowsToTable(tableAsQueryString, numberOfRows, includeFooter = true) {
-    if (log) console.log($(tableAsQueryString + " tr"));
-    const numberOfColumns = getTableWidth(tableAsQueryString);
-    const absoluteIndexOfFirstRowToBeAdded = getTableHeight(tableAsQueryString, true, true);
-    const generateArrayMapFunctionsArray = [(_, index) => index + 1,
+    for (let i = 0; i < numberOfRows; i++) {
+        
+    }
+}
+
+function generateTableRows(numberOfRows, numberOfColumns, firstValue = 1) {
+    if (!Number.isInteger(numberOfRows) || !Number.isInteger(numberOfColumns)) { return []; }
+    if (numberOfRows < 1 || numberOfColumns < 1) { return []; }
+
+    let result = [];
+    const generateArrayMapFunctionsArray = [
+        (_, index) => index,
         (_, index) => Number(index + "." + index),
-        (_, index) => intToUpperLetter(index),
-        (_, index) => intToUpperLetter(index).toLowerCase()
+        (_, index) => intToUpperLetter(index - 1),
+        (_, index) => intToUpperLetter(index - 1).toLowerCase()
     ];
     const generateArrayMapFunctionsArrayLength = generateArrayMapFunctionsArray.length;
 
 
-    doNTimes(numberOfRows, () => { $(tableAsQueryString + " tbody").append("<tr><td>abc</td></tr>"); });
+    doNTimes(numberOfRows, (rowIndex) => {
+        let rowData = "";
+        doNTimes(numberOfColumns, (i) => {
+            rowData += "<td>" + generateArrayMapFunctionsArray[i % generateArrayMapFunctionsArrayLength]("", rowIndex + firstValue) + "</td>";
+        })
 
+        result.push(`<tr>${rowData}</tr>`)
+    });
 
-    for (let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++) {
-        const newColumnData = generateArray(numberOfRows, generateArrayMapFunctionsArray[columnIndex % generateArrayMapFunctionsArrayLength]);
-        setTableColumnData(tableAsQueryString, columnIndex, newColumnData, false, true);
-    }
+    return result;
 }
+
+
+function addRowsToTable(tableAsQueryString, rows, tablePart = "tbody") {
+    if (["tbody", "tfoot"].find(value => value === tablePart) === undefined) { return; }
+
+    doNTimes(rows.length, (i) => {
+        $(tableAsQueryString + " " + tablePart).append(rows[i]);
+    })
+}
+
+function insertRowsInTable(tableAsQueryString, numberOfRows, tablePart = "tbody") {
+    if (["tbody", "tfoot"].find(value => value === tablePart) === undefined) { return; }
+    if (numberOfRows < 1) { return; }
+
+    doNTimes(numberOfRows, () => { $(tableAsQueryString + " " + tablePart).append("<tr></tr>"); });
+}
+
+
+// function addRowsToTable(tableAsQueryString, numberOfRows, includeFooter = true) {
+//     // if (log) console.log($(tableAsQueryString + " tr"));
+//     const numberOfColumns = getTableWidth(tableAsQueryString);
+//     const absoluteIndexOfFirstRowToBeAdded = getTableHeight(tableAsQueryString, true, true);
+//     const generateArrayMapFunctionsArray = [(_, index) => index + 1,
+//         (_, index) => Number(index + "." + index),
+//         (_, index) => intToUpperLetter(index),
+//         (_, index) => intToUpperLetter(index).toLowerCase()
+//     ];
+//     const generateArrayMapFunctionsArrayLength = generateArrayMapFunctionsArray.length;
+//
+//
+//     // doNTimes(numberOfRows, () => { $(tableAsQueryString + " tbody").append("<tr></tr>"); });
+//     insertRowsInTable(tableAsQueryString, 10, "tbody");
+//     insertRowsInTable(tableAsQueryString, 10, "tbody");
+//
+//
+//     for (let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++) {
+//         const newColumnData = generateArray(numberOfRows, generateArrayMapFunctionsArray[columnIndex % generateArrayMapFunctionsArrayLength]);
+//         setTableColumnData(tableAsQueryString, columnIndex, newColumnData, false, true);
+//     }
+// }
 
 
 
