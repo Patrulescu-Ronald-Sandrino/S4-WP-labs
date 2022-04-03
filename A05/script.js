@@ -9,15 +9,15 @@ $(function main() {
     const tableAsQueryString = "#myTable";
 
     // 1. insert values into the table
-    const tableRows = generateTableRows(10, 4,  1);
+    const tableRows = generateTableRows(9, 4,  1);
     addRowsToTable(tableAsQueryString,  tableRows.slice(0, -1),"tbody");
-    // addRowsToTable(tableAsQueryString,  tableRows.slice(-1),"tfoot");
-    addRowsToTable(tableAsQueryString,  ["<tr><td>Footer 1</td><td>Footer 2</td><td>Footer 3</td><td>Footer 4</td></tr>"],"tfoot");
+    addRowsToTable(tableAsQueryString,  tableRows.slice(-1),"tfoot");
+    // addRowsToTable(tableAsQueryString,  ["<tr><td>Footer 1</td><td>Footer 2</td><td>Footer 3</td><td>Footer 4</td></tr>"],"tfoot");
 
     // TODO 2. implement sorting by clicking on headers
     addSortingToTableColumns(tableAsQueryString, generateArray(getTableWidth(tableAsQueryString), (_, index) => index + 1));
     // TODO 3. implement swapping by click on footers
-    // TODO: addSwappingToTable(...)
+    //  addSwappingToTable(...)
 
     if (log) console.log("[log][main()] ended...");
 })
