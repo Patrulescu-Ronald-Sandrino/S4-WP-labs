@@ -92,14 +92,18 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
             let isArrayOfNumbers = doesStringsArrayLookLikeNumbersArray(getTableColumnData(tableAsQueryString, columnIndex, false, true));
 
             // based on the previous result, get the correct comparator
+            // TODO #1.1: refactor to getColumnComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, tableAsQueryString)
+            //  and make the decision whether to compare as number inside it;
+            //  the comparator should be something like this: table[currentValue][columnIndex] > table[key][columnIndex]
             let comparator = getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, isArrayOfNumbers);
-            // TODO #1: sort every column
-            //          - solve getColumnData
+
+            // TODO #1.2: sort rows indices by comparing column data
+            //
             // let columnData = toNumbersArrayOrReturnUnchanged(getTableColumnData(tableAsQueryString, columnIndex));
             //
             // sortArray(columnData, comparator);
             // swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
-            //
+            // TODO #1.3: swap rows' content (see WhatsApp)
             // setTableColumnData(tableAsQueryString, columnIndex, columnData, false, true);
             console.log("clicked header ", columnIndex);
         });

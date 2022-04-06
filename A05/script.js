@@ -14,9 +14,9 @@ $(function main() {
     addRowsToTable(tableAsQueryString,  tableRows.slice(-1),"tfoot");
     // addRowsToTable(tableAsQueryString,  ["<tr><td>Footer 1</td><td>Footer 2</td><td>Footer 3</td><td>Footer 4</td></tr>"],"tfoot");
 
-    // TODO 2. implement sorting by clicking on headers
+    // TODO #1: implement sorting by clicking on headers
     addTableSortingToTableColumns(tableAsQueryString, generateArray(getTableWidth(tableAsQueryString), (_, index) => index));
-    // TODO 3. implement swapping by click on footers
+    // TODO #2. implement swapping by click on footers
     //  addSwappingToTable(...)
 
     if (log) console.log("[log][main()] ended...");
