@@ -15,7 +15,7 @@ $(function main() {
     // addRowsToTable(tableAsQueryString,  ["<tr><td>Footer 1</td><td>Footer 2</td><td>Footer 3</td><td>Footer 4</td></tr>"],"tfoot");
 
     // TODO 2. implement sorting by clicking on headers
-    addSortingToTableColumns(tableAsQueryString, generateArray(getTableWidth(tableAsQueryString), (_, index) => index + 1));
+    addTableSortingToTableColumns(tableAsQueryString, generateArray(getTableWidth(tableAsQueryString), (_, index) => index));
     // TODO 3. implement swapping by click on footers
     //  addSwappingToTable(...)
 
