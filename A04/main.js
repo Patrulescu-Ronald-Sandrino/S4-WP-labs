@@ -45,11 +45,14 @@ function setLastSorting(lastSortingArray, index) {
     lastSortingArray[index] = lastSortingArray[index] === 'ASC' ? 'DESC' : 'ASC';
 }
 
+/// Returns true if every string in the array looks like a number (int or float)
 function isArrayOfNumberStrings(array) {
     return array.filter(value => /^[+-]?\d+(\.\d+)?/.test(value)).length === array.length; // inspired from: https://stackoverflow.com/questions/5630123/javascript-string-integer-comparisons
 }
 
 
+/// Turns an array of strings into an array of numbers, if all string in the array look like a number <br>
+/// Otherwise returns the initial array
 function arrayValuesToIntOrKeepAsString(array) {
     return isArrayOfNumberStrings(array) ? array.map(value => Number(value)) : array;
 }
