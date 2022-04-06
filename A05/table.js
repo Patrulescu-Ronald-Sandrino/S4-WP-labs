@@ -25,14 +25,6 @@ function getTableRows(tableAsQueryString, includeHeader = false, includeFooter =
 
 // TODO: mind the "td,th"; maybe provide another parameter for allowing/adding ths too
 function getTableColumn(tableAsQueryString, index, includeHeader= false, includeFooter = true) {
-    // return Array.from($(tableAsQueryString + getTableDirectChildrenQueryString(includeFooter)) + " tr");
-    // TODO
-    // TODO replace getTableDirectChildrenQueryString(includeFooter) with filter or find or something like that
-    // return $(tableAsQueryString + getTableDirectChildrenQueryString(includeFooter) + " tr").slice(!includeHeader).map(tr => tr.find("td,th").eq(index)).toArray();
-    // return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : "")).map(tr => tr.find("td,th").eq(index)).toArray();
-    // return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : "")).map((_, tr) => tr.find("td,th").eq(index)).toArray();
-    // return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : "")).map((_, tr) => tr.children[2]) // works
-    // return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : "")).map((_, tr) => $(tr).find("td")[2]) // works; source: https://stackoverflow.com/questions/24300762/jquery-throws-an-error-that-element-find-is-not-a-function
     return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : "")).map((_, tr) => $(tr).find("th,td")[index]) // works; source: https://stackoverflow.com/questions/24300762/jquery-throws-an-error-that-element-find-is-not-a-function
 }
 
@@ -96,15 +88,17 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
         // if (columnIndex < 0 || columnIndex >= tableHeadersLength) { continue; } // skip invalid indices
 
         tableHeaders[columnIndex].addEventListener('click', () => {
-            // TODO decide the type of column data (string vs number)
-            // TODO based on previous result, get the correct comparator
-            let comparator = getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex);
+            // decide the type of column data (string vs number)
+            let isArrayOfNumbers = doesStringsArrayLookLikeNumbersArray(getTableColumnData(tableAsQueryString, columnIndex, false, true));
+
+            // based on the previous result, get the correct comparator
+            let comparator = getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, isArrayOfNumbers);
             // TODO #1: sort every column
             //          - solve getColumnData
-            // let columnData = arrayValuesToIntOrKeepAsString(getTableColumnData(tableAsQueryString, columnIndex));
+            // let columnData = toNumbersArrayOrReturnUnchanged(getTableColumnData(tableAsQueryString, columnIndex));
             //
             // sortArray(columnData, comparator);
-            // setLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
+            // swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
             //
             // setTableColumnData(tableAsQueryString, columnIndex, columnData, false, true);
             console.log("clicked header ", columnIndex);
@@ -113,12 +107,30 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
     }
 }
 
-function getComparatorBasedOnLastSortingArray(lastSortingArray, index) {
-    return lastSortingArray[index] === 'ASC'
-        ? (currentValueCompared, key) => currentValueCompared < key
+function getComparatorBasedOnLastSortingArray(lastSortingArray, index, compareAsNumbers = true) {
+    // v1
+    const toNumberOrReturnUnchanged = (value, shouldBeNumber) => { return shouldBeNumber ? Number(value) : value; };
+
+    // v2
+    const ascendingSortingComparator = compareAsNumbers
+        ? (currentValueCompared, key) => Number(currentValueCompared) > Number(key)
         : (currentValueCompared, key) => currentValueCompared > key;
+    const descendingSortingComparator = compareAsNumbers
+        ? (currentValueCompared, key) => Number(currentValueCompared) < Number(key)
+        : (currentValueCompared, key) => currentValueCompared < key;
+
+    // v3
+    const cast1 = (value) => compareAsNumbers ? Number(value) : value;
+
+    // v4 - perform the checking  once
+    const cast2 = compareAsNumbers ? (_) => Number(_) : (_) => _;
+
+
+    return lastSortingArray[index] === 'ASC'
+        ? (currentValueCompared, key) => cast2(currentValueCompared) < cast2(key)
+        : (currentValueCompared, key) => cast2(currentValueCompared) > cast2(key);
 }
 
-function setLastSortingBasedOnLastSortingArray(lastSortingArray, index) {
+function swapLastSortingBasedOnLastSortingArray(lastSortingArray, index) {
     lastSortingArray[index] = lastSortingArray[index] === 'ASC' ? 'DESC' : 'ASC';
 }
