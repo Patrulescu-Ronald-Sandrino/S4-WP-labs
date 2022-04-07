@@ -18,14 +18,27 @@ function getTableHeaders(tableAsQueryString) {
 }
 
 
-function getTableRows(tableAsQueryString, includeHeader = false, includeFooter = true) {
-    return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : ""));
+function getTableRows(tableAsQueryString, includeHeader = false, includeFooter = true) { // includeHeader = false; includeFooter = true;
+    return $(tableAsQueryString
+        + " > tbody > tr"
+        + (includeHeader ? ",thead > tr" : "")
+        + (includeFooter ? ",tfoot > tr" : "")
+    );
 }
 
 
 // TODO: mind the "td,th"; maybe provide another parameter for allowing/adding ths too
-function getTableColumn(tableAsQueryString, index, includeHeader= false, includeFooter = true) {
-    return $(tableAsQueryString + " > tbody > tr" + (includeHeader ? ",thead > tr" : "") + (includeFooter ? ",tfoot > tr" : "")).map((_, tr) => $(tr).find("th,td")[index]) // works; source: https://stackoverflow.com/questions/24300762/jquery-throws-an-error-that-element-find-is-not-a-function
+function getTableColumn(tableAsQueryString, index, includeHeader = false, includeFooter = true) {
+    //// v1
+    // return $(tableAsQueryString
+    //     + " > tbody > tr"
+    //     + (includeHeader ? ",thead > tr" : "")
+    //     + (includeFooter ? ",tfoot > tr" : ""))
+    //// end-of-v1
+    // v2
+    return getTableRows(tableAsQueryString, includeHeader, includeFooter)
+    // end-of-v2
+        .map((_, tr) => $(tr).find("th,td")[index]) // works; source: https://stackoverflow.com/questions/24300762/jquery-throws-an-error-that-element-find-is-not-a-function
 }
 
 
@@ -37,6 +50,15 @@ function getTableColumnData(tableAsQueryString, columnIndex, includeHeader = fal
 function getTableCellData(tableAsQueryString, rowIndex, columnIndex) {
     return $(tableAsQueryString + " th,td")[rowIndex * getTableWidth(tableAsQueryString) + columnIndex];
 }
+
+/// Returns an array of <br>
+/// arrays of <br>
+/// row contents.
+function getTableData(tableAsQueryString) {
+    // return getTableRows(tableAsQueryString, 1, 1).map((_, tr) => $(tr).find("th,td").map((_, cell) => cell.innerText)); // v1
+    return Array.from(getTableRows(tableAsQueryString, 1, 1).map((_, tr) => $(tr).find("th,td").map((_, cell) => cell.innerText))).map(value => Array.from(value));
+}
+
 
 // function setTableColumnData(tableAsQueryString, columnIndex, newData, includeHeader = false, includeFooter = true) {
 //
@@ -64,7 +86,6 @@ function generateTableRows(numberOfRows, numberOfColumns, firstValue = 1, random
         let rowData = "";
         doNTimes(numberOfColumns, (i) => {
             const value = random ? truncateFloatToInt(generateRandomNumber(firstValue, numberOfRows)) : rowIndex + firstValue;
-            // rowData += "<td>" + generateArrayMapFunctionsArray[i % generateArrayMapFunctionsArrayLength](null, rowIndex + firstValue) + "</td>";
             rowData += "<td>" + generateArrayMapFunctionsArray[i % generateArrayMapFunctionsArrayLength](null, value) + "</td>";
         })
 
@@ -99,6 +120,10 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
         // if (columnIndex < 0 || columnIndex >= tableHeadersLength) { continue; } // skip invalid indices
 
         tableHeaders[columnIndex].addEventListener('click', () => {
+            if (enableLogging) console.log("[log][addTableSortingToTableColumns()] addEventListener() started...");
+            if (enableLogging) console.log("[log][addTableSortingToTableColumns()] clicked header ", columnIndex);
+            // log("clicked header ", columnIndex);
+
             // get the correct comparator for the current column, based on it's last sorting and the column's content
             const columnData = getTableColumnData(tableAsQueryString, columnIndex, true, true);
             // TODO: What happens if I swap a Strings column with a Numbers column?
@@ -107,9 +132,21 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
             const rowIndices = generateArray(getTableHeight(tableAsQueryString) - 1, (_, index) => index + 1);
             sortArray(rowIndices, comparator);
             swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
-            // TODO #1.3: swap rows' content (see WhatsApp)
-            // setTableColumnData(tableAsQueryString, columnIndex, columnData, false, true);
-            console.log("clicked header ", columnIndex);
+            const indicesOfSortedRows = [0].concat(rowIndices); // include the header row, so the indexing in the following will be easier; source: https://stackoverflow.com/questions/62717815/concatenate-two-arrays
+
+            // TODO #1.3: replace row contents
+            const tableData = getTableData(tableAsQueryString) // tableData= [['Column 1', 'Column 2', 'Column 3', 'Column 4'], [7, 1.1, 'd', 'P], ..., [5, 8.8, 'x', 'Z']]
+
+            for (let rowIndex = 1; rowIndex < getTableHeight(tableAsQueryString); rowIndex++) {
+                if (enableLogging) console.log("[log][addTableSortingToTableColumns()] rowIndex =", rowIndex, " indicesOfSortedRows[row] =", indicesOfSortedRows[rowIndex], " tableData[indicesOfSortedRows[rowIndex]] =", tableData[indicesOfSortedRows[rowIndex]]);
+                 // function setTableRowData(tableAsQueryString, rowIndex, rowData) {}
+
+                 // setTableRowData(tableAsQueryString, rowIndex, tableData[indicesOfSortedRows[rowIndex]]);
+            }
+            if (enableLogging) {
+                console.log("[log][addTableSortingToTableColumns()] addEventListener() ended...");
+                console.log();
+            }
         });
 
     }
@@ -117,12 +154,12 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
 
 function getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, columnData) {
 
-    if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] columnIndex: ", columnIndex);
-    // if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] Array.from(columnData.slice(1)): ", Array.from(columnData.slice(1)));
-    if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] columnData.slice(1): ", columnData.slice(1));
+    if (enableLogging) console.log("[log][getComparatorBasedOnLastSortingArray()] columnIndex: ", columnIndex);
+    // if (enableLogging) console.log("[log][getComparatorBasedOnLastSortingArray()] Array.from(columnData.slice(1)): ", Array.from(columnData.slice(1)));
+    if (enableLogging) console.log("[log][getComparatorBasedOnLastSortingArray()] columnData.slice(1): ", columnData.slice(1));
     // const isColumnOfNumbers = doesStringsArrayLookLikeNumbersArray(columnData.slice(1)); // slice in order to exclude the column's header // bad version, cuz slice() returns an object
     const isColumnOfNumbers = doesStringsArrayLookLikeNumbersArray(Array.from(columnData.slice(1))); // slice in order to exclude the column's header
-    if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] isColumnOfNumbers: ", isColumnOfNumbers.toString());
+    if (enableLogging) console.log("[log][getComparatorBasedOnLastSortingArray()] isColumnOfNumbers: ", isColumnOfNumbers.toString());
     const toActualColumnDataDataType = isColumnOfNumbers ? (_) => Number(_) : (_) => _;
 
     const getColumnCellDataAtRow = (rowIndex) => toActualColumnDataDataType(columnData[rowIndex]);

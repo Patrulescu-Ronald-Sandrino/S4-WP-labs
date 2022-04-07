@@ -1,10 +1,10 @@
 'use strict';
 let tableAsQueryString = "#myTable";
-let log = true;
+let enableLogging = true;
 
 
 $(function main() {
-    if (log) console.log("[log][main()] started...");
+    if (enableLogging) console.log("[log][main()] started...");
 
     const tableAsQueryString = "#myTable";
 
@@ -14,21 +14,23 @@ $(function main() {
     addRowsToTable(tableAsQueryString,  tableRows.slice(-1),"tfoot");
     // addRowsToTable(tableAsQueryString,  ["<tr><td>Footer 1</td><td>Footer 2</td><td>Footer 3</td><td>Footer 4</td></tr>"],"tfoot");
 
-    // TODO #1: implement sorting by clicking on headers
-    addTableSortingToTableColumns(tableAsQueryString, generateArray(getTableWidth(tableAsQueryString), (_, index) => index));
-    // TODO #2. implement swapping by click on footers
+    // TODO #1: 2. implement sorting by clicking on headers
+    const columnsIndices = generateArray(getTableWidth(tableAsQueryString), (_, index) => index);
+    addTableSortingToTableColumns(tableAsQueryString, columnsIndices);
+    // TODO #2: 3. implement swapping by click on footers
     //  addSwappingToTable(...)
 
-    if (log) console.log("[log][main()] ended...");
-})
+    if (enableLogging) console.log("[log][main()] ended...");
+});
 
 
 
 
 
 /*
-TODO IDEAs:
-    1.
+TODO
+    1. do a commit where you remove all lines commented with "remove later"
+    2.
 
  */
 
