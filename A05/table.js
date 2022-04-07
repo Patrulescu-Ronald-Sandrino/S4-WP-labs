@@ -39,11 +39,14 @@ function getTableColumn(tableAsQueryString, index, includeHeader = false, includ
     return getTableRows(tableAsQueryString, includeHeader, includeFooter)
     // end-of-v2
         .map((_, tr) => $(tr).find("th,td")[index]) // works; source: https://stackoverflow.com/questions/24300762/jquery-throws-an-error-that-element-find-is-not-a-function
+
+    // IDEA: wrap in Array.from() (check it's usage before)
 }
 
 
 function getTableColumnData(tableAsQueryString, columnIndex, includeHeader = false, includeFooter = true) {
-    return $(getTableColumn(tableAsQueryString, columnIndex, includeHeader, includeFooter)).map((_, cell) => cell.innerText);
+    // return $(getTableColumn(tableAsQueryString, columnIndex, includeHeader, includeFooter)).map((_, cell) => cell.innerText);
+    return Array.from($(getTableColumn(tableAsQueryString, columnIndex, includeHeader, includeFooter)).map((_, cell) => cell.innerText));
 }
 
 
@@ -60,12 +63,14 @@ function getTableData(tableAsQueryString) {
 }
 
 
-// function setTableColumnData(tableAsQueryString, columnIndex, newData, includeHeader = false, includeFooter = true) {
-//
-//
-//     // TODO if (includeFooter) => @swap-last-row-and-footer
-// }
-//
+function setTableColumnData(tableAsQueryString, columnIndex, newData, includeHeader = false, includeFooter = true) {
+    const column = Array.from(getTableColumn(tableAsQueryString, columnIndex, includeHeader, includeFooter));
+
+    doNTimes(column.length, (rowIndex) => {
+       column[rowIndex].innerText = newData[rowIndex];
+    });
+}
+
 
 function getTableRow(tableAsQueryString, rowIndex) {
     return getTableRows(tableAsQueryString, true, true)[rowIndex];
@@ -180,4 +185,25 @@ function getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, col
 
 function swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex) {
     lastSortingArray[columnIndex] = lastSortingArray[columnIndex] === 'ASC' ? 'DESC' : 'ASC';
+}
+
+
+function addTableColumnsSwappingOnClickedFooter(tableAsQueryString, swapperFunction) {
+    const lastTableRowCells = getTableRow(tableAsQueryString, getTableHeight(tableAsQueryString) - 1).cells;
+    const lastTableRowLength = lastTableRowCells.length;
+
+    doNTimes(lastTableRowLength, (columnIndex) => {
+        lastTableRowCells[columnIndex].addEventListener('click', () => {
+            const otherColumnIndex = swapperFunction(columnIndex);
+            if (enableLogging) console.log("[log][addTableColumnsSwappingOnClickedFooter()] clicked footer of column ", columnIndex, " should be swapped with column ", otherColumnIndex);
+            
+            const columnData = getTableColumnData(tableAsQueryString, columnIndex, true, true);
+            if (enableLogging) console.log("[log][addTableColumnsSwappingOnClickedFooter()] columnIndex: ", columnIndex, " columnData: ", columnData);
+            const otherColumnData = getTableColumnData(tableAsQueryString, otherColumnIndex, true, true);
+            if (enableLogging) console.log("[log][addTableColumnsSwappingOnClickedFooter()] otherColumnIndex: ", otherColumnIndex, " otherColumnData: ", otherColumnData);
+
+            setTableColumnData(tableAsQueryString, columnIndex, otherColumnData, true, true); // TODO
+            setTableColumnData(tableAsQueryString, otherColumnIndex, columnData, true, true); // TODO
+        });
+    });
 }
