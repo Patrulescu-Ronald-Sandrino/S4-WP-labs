@@ -18,7 +18,7 @@ function getTableHeaders(tableAsQueryString) {
 }
 
 
-function getTableRows(tableAsQueryString, includeHeader = false, includeFooter = true) { // includeHeader = false; includeFooter = true;
+function getTableRows(tableAsQueryString, includeHeader = false, includeFooter = true) { // getTableRows(tableAsQueryString, true, true)
     return $(tableAsQueryString
         + " > tbody > tr"
         + (includeHeader ? ",thead > tr" : "")
@@ -66,6 +66,17 @@ function getTableData(tableAsQueryString) {
 //     // TODO if (includeFooter) => @swap-last-row-and-footer
 // }
 //
+
+function getTableRow(tableAsQueryString, rowIndex) {
+    return getTableRows(tableAsQueryString, true, true)[rowIndex];
+}
+
+function setTableRowData(tableAsQueryString, rowIndex, rowData) {
+    const rowCells = getTableRow(tableAsQueryString, rowIndex).cells;
+    doNTimes(rowCells.length, (columnIndex) => {
+        rowCells[columnIndex].innerText = rowData[columnIndex];
+    });
+}
 
 
 function generateTableRows(numberOfRows, numberOfColumns, firstValue = 1, random = false) {
@@ -134,14 +145,11 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
             swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
             const indicesOfSortedRows = [0].concat(rowIndices); // include the header row, so the indexing in the following will be easier; source: https://stackoverflow.com/questions/62717815/concatenate-two-arrays
 
-            // TODO #1.3: replace row contents
             const tableData = getTableData(tableAsQueryString) // tableData= [['Column 1', 'Column 2', 'Column 3', 'Column 4'], [7, 1.1, 'd', 'P], ..., [5, 8.8, 'x', 'Z']]
 
             for (let rowIndex = 1; rowIndex < getTableHeight(tableAsQueryString); rowIndex++) {
                 if (enableLogging) console.log("[log][addTableSortingToTableColumns()] rowIndex =", rowIndex, " indicesOfSortedRows[row] =", indicesOfSortedRows[rowIndex], " tableData[indicesOfSortedRows[rowIndex]] =", tableData[indicesOfSortedRows[rowIndex]]);
-                 // function setTableRowData(tableAsQueryString, rowIndex, rowData) {}
-
-                 // setTableRowData(tableAsQueryString, rowIndex, tableData[indicesOfSortedRows[rowIndex]]);
+                setTableRowData(tableAsQueryString, rowIndex, tableData[indicesOfSortedRows[rowIndex]]);
             }
             if (enableLogging) {
                 console.log("[log][addTableSortingToTableColumns()] addEventListener() ended...");
