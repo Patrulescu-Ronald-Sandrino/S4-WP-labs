@@ -3,6 +3,7 @@ let tableAsQueryString = "#myTable";
 let enableLogging = true;
 
 
+
 $(function main() {
     if (enableLogging) console.log("[log][main()] started...");
 
@@ -14,11 +15,11 @@ $(function main() {
     addRowsToTable(tableAsQueryString,  tableRows.slice(-1),"tfoot");
     // addRowsToTable(tableAsQueryString,  ["<tr><td>Footer 1</td><td>Footer 2</td><td>Footer 3</td><td>Footer 4</td></tr>"],"tfoot");
 
-    // TODO #1: 2. implement sorting by clicking on headers
+    // 2. sort table by column of clicked header
     const columnsIndices = generateArray(getTableWidth(tableAsQueryString), (_, index) => index);
     addTableSortingToTableColumns(tableAsQueryString, columnsIndices);
-    // TODO #2: 3. implement swapping by click on footers
-    //  addSwappingToTable(...)
+    // 3. implement swapping by click on footers
+     addTableColumnsSwappingOnClickedFooter(tableAsQueryString, (footerIndex) => (footerIndex + 1) % (getTableWidth(tableAsQueryString)));
 
     if (enableLogging) console.log("[log][main()] ended...");
 });
@@ -30,7 +31,7 @@ $(function main() {
 /*
 TODO
     1. do a commit where you remove all lines commented with "remove later"
-    2.
+    2. replace "if (enableLogging) console.log("[log][<function name>()] <message>");" with "log(<message>);"
 
  */
 

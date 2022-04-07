@@ -76,7 +76,7 @@ function sortArray(array, comparator = (currentValue, key) => currentValue > key
 }
 
 // const getCallerLambda = () => (new Error()).stack.split("\n")[2].split("/")[0]; // remove later
-const getCallerLambda = () => (new Error()).stack.split("\n")[2].split("@")[0];
+const getCallerLambda = () => (new Error()).stack.split("\n")[2].split("@")[0]; // source: heystewart's answer on https://stackoverflow.com/questions/280389/how-do-you-find-out-the-caller-function-in-javascript
 
 
 // wrapper for console.log() <br>
