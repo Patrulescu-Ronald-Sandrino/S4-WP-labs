@@ -202,8 +202,8 @@ function addTableColumnsSwappingOnClickedFooter(tableAsQueryString, swapperFunct
             const otherColumnData = getTableColumnData(tableAsQueryString, otherColumnIndex, true, true);
             if (enableLogging) console.log("[log][addTableColumnsSwappingOnClickedFooter()] otherColumnIndex: ", otherColumnIndex, " otherColumnData: ", otherColumnData);
 
-            setTableColumnData(tableAsQueryString, columnIndex, otherColumnData, true, true); // TODO
-            setTableColumnData(tableAsQueryString, otherColumnIndex, columnData, true, true); // TODO
+            setTableColumnData(tableAsQueryString, columnIndex, otherColumnData, true, true);
+            setTableColumnData(tableAsQueryString, otherColumnIndex, columnData, true, true);
         });
     });
 }
