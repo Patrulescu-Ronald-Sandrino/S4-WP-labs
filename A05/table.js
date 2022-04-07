@@ -46,7 +46,7 @@ function getTableCellData(tableAsQueryString, rowIndex, columnIndex) {
 //
 
 
-function generateTableRows(numberOfRows, numberOfColumns, firstValue = 1) {
+function generateTableRows(numberOfRows, numberOfColumns, firstValue = 1, random = false) {
     if (!Number.isInteger(numberOfRows) || !Number.isInteger(numberOfColumns)) { return []; }
     if (numberOfRows < 1 || numberOfColumns < 1) { return []; }
 
@@ -63,7 +63,9 @@ function generateTableRows(numberOfRows, numberOfColumns, firstValue = 1) {
     doNTimes(numberOfRows, (rowIndex) => {
         let rowData = "";
         doNTimes(numberOfColumns, (i) => {
-            rowData += "<td>" + generateArrayMapFunctionsArray[i % generateArrayMapFunctionsArrayLength]("", rowIndex + firstValue) + "</td>";
+            const value = random ? truncateFloatToInt(generateRandomNumber(firstValue, numberOfRows)) : rowIndex + firstValue;
+            // rowData += "<td>" + generateArrayMapFunctionsArray[i % generateArrayMapFunctionsArrayLength](null, rowIndex + firstValue) + "</td>";
+            rowData += "<td>" + generateArrayMapFunctionsArray[i % generateArrayMapFunctionsArrayLength](null, value) + "</td>";
         })
 
         result.push(`<tr>${rowData}</tr>`)
@@ -92,17 +94,16 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
         // if (columnIndex < 0 || columnIndex >= tableHeadersLength) { continue; } // skip invalid indices
 
         tableHeaders[columnIndex].addEventListener('click', () => {
-            // TODO #1.1: refactor to getColumnComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, tableAsQueryString)
-            //  and make the decision whether to compare as number inside it;
-            //  the comparator should be something like this: table[currentValue][columnIndex] > table[key][columnIndex]
-            // get the correct comparator for the current column header, based on the way it was last sorted and the column content\
-            // TODO: IDEA - prototype 2:  send just the column data instead
-            let comparator = getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, tableAsQueryString);
+            // get the correct comparator for the current column, based on it's last sorting and the column's content
+            const columnData = getTableColumnData(tableAsQueryString, columnIndex, true, true);
+            // TODO: add a randomizer
+            // TODO: What happens if I swap a Strings column with a Numbers column?
+            const comparator = getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, columnData);
 
             // TODO #1.2: sort rows indices by comparing column data
-            let rowIndices = generateArray(getTableHeight(tableAsQueryString) - 1, (_, index) => index + 1);
+            const rowIndices = generateArray(getTableHeight(tableAsQueryString) - 1, (_, index) => index + 1);
             sortArray(rowIndices, comparator);
-            // swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
+            swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex);
             // TODO #1.3: swap rows' content (see WhatsApp)
             // setTableColumnData(tableAsQueryString, columnIndex, columnData, false, true);
             console.log("clicked header ", columnIndex);
@@ -111,38 +112,42 @@ function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, 
     }
 }
 
-function getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, tableAsQueryString) {
+function getComparatorBasedOnLastSortingArray(lastSortingArray, columnIndex, columnData) {
     // v1
     // const toNumberOrReturnUnchanged = (value, shouldBeNumber) => { return shouldBeNumber ? Number(value) : value; };
 
     // v2
-    const ascendingSortingComparator = compareAsNumbers
-        ? (currentValueCompared, key) => Number(currentValueCompared) > Number(key)
-        : (currentValueCompared, key) => currentValueCompared > key;
-    const descendingSortingComparator = compareAsNumbers
-        ? (currentValueCompared, key) => Number(currentValueCompared) < Number(key)
-        : (currentValueCompared, key) => currentValueCompared < key;
-
-    // v3
-    const cast1 = (value) => compareAsNumbers ? Number(value) : value;
-
-    // v4 - perform the checking  once
-    const cast2 = compareAsNumbers ? (_) => Number(_) : (_) => _;
+    // const ascendingSortingComparator = compareAsNumbers
+    //     ? (currentValueCompared, key) => Number(currentValueCompared) > Number(key)
+    //     : (currentValueCompared, key) => currentValueCompared > key;
+    // const descendingSortingComparator = compareAsNumbers
+    //     ? (currentValueCompared, key) => Number(currentValueCompared) < Number(key)
+    //     : (currentValueCompared, key) => currentValueCompared < key;
+    //
+    // // v3
+    // const cast1 = (value) => compareAsNumbers ? Number(value) : value;
+    //
+    // // v4 - perform the checking  once
+    // const cast2 = compareAsNumbers ? (_) => Number(_) : (_) => _;
 
     // v5 - refactored to include tableAsQueryString
     // const getTableDataAtRow = (rowIndex) => getTableCellData(tableAsQueryString, rowIndex, columnIndex);
 
 
     // decide the type of column data (string vs number)
-    const isColumnOfNumbers = doesStringsArrayLookLikeNumbersArray(getTableColumnData(tableAsQueryString, columnIndex, false, true));
-    const toNumberOrReturnUnchanged = isColumnOfNumbers ? (_) => Number(_) : (_) => _;
 
-    const getConvertedTableCellDataAtRow = (rowIndex) => toNumberOrReturnUnchanged(getTableCellData(tableAsQueryString, rowIndex, columnIndex));
+    if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] columnIndex: ", columnIndex);
+    if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] columnData.slice(1): ", Array.from(columnData.slice(1)));
+    const isColumnOfNumbers = doesStringsArrayLookLikeNumbersArray(columnData.slice(1)); // slice in order to exclude the column's header
+    if (log) console.log("[log][getComparatorBasedOnLastSortingArray()] isColumnOfNumbers: ", isColumnOfNumbers.toString());
+    const toActualColumnDataDataType = isColumnOfNumbers ? (_) => Number(_) : (_) => _;
+
+    const getColumnCellDataAtRow = (rowIndex) => toActualColumnDataDataType(columnData[rowIndex]);
 
 
     return lastSortingArray[columnIndex] === 'ASC'
-        ? (currentValueCompared, key) => getConvertedTableCellDataAtRow(currentValueCompared) < getConvertedTableCellDataAtRow(key)
-        : (currentValueCompared, key) => getConvertedTableCellDataAtRow(currentValueCompared) > getConvertedTableCellDataAtRow(key);
+        ? (currentValueCompared, key) => getColumnCellDataAtRow(currentValueCompared) < getColumnCellDataAtRow(key)
+        : (currentValueCompared, key) => getColumnCellDataAtRow(currentValueCompared) > getColumnCellDataAtRow(key);
 }
 
 function swapLastSortingBasedOnLastSortingArray(lastSortingArray, columnIndex) {

@@ -31,3 +31,33 @@ function doNTimes(N, functionToExecute = (i) => { console.log(i); }) {
         functionToExecute(i);
     }
 }
+
+// generates a random real number in the interval [min, max) <br>
+// source: user1606185's answer on https://grabthiscode.com/javascript/generate-random-number-jquery
+function generateRandomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function truncateFloatToInt(floatValue) {
+    return floatValue | 0;
+}
+
+function sortArray(array, comparator = (currentValue, key) => currentValue > key) { // example: sortArray([2, 1, 4, 2, 5])
+    // source: https://www.geeksforgeeks.org/insertion-sort/
+    let length = array.length;
+
+    for (let i = 1; i < length; i++) {
+        let key, j;
+
+        key = array[i];
+        j = i - 1;
+
+        while (j >= 0 && comparator(array[j], key)) {
+            array[j + 1] = array[j]
+            j = j - 1;
+        }
+        array[j + 1] = key;
+    }
+    if (log) console.log("[log][sortArray()] comparator: ", comparator.toString());
+    if (log) console.log("[log][sortArray()] array: ", array);
+}
