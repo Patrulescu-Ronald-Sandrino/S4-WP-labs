@@ -38,6 +38,8 @@ function generateRandomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+// sources: https://www.delftstack.com/howto/javascript/javascript-float-to-int/
+// explanation: https://stackoverflow.com/questions/7487977/using-bitwise-or-0-to-floor-a-number
 function truncateFloatToInt(floatValue) {
     return floatValue | 0;
 }

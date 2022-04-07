@@ -83,7 +83,12 @@ function addRowsToTable(tableAsQueryString, rows, tablePart = "tbody") {
     })
 }
 
-
+/**
+ *
+ * @param tableAsQueryString
+ * @param columnsIndicesArray an array of the indices of the columns that will have sorting
+ * @param includeFooter
+ */
 function addTableSortingToTableColumns(tableAsQueryString, columnsIndicesArray, includeFooter = true) {
     let tableHeaders = getTableHeaders(tableAsQueryString); // assumes: headers are in the first row (index 0)
     let tableHeadersLength = tableHeaders.length;
