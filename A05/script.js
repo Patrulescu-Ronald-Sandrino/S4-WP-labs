@@ -18,7 +18,8 @@ $(function main() {
     // 2. sort table by column of clicked header
     const columnsIndices = generateArray(getTableWidth(tableAsQueryString), (_, index) => index);
     addTableSortingToTableColumns(tableAsQueryString, columnsIndices);
-    // 3. implement swapping by click on footers
+
+    // 3. implement swapping by clicking on footers
      addTableColumnsSwappingOnClickedFooter(tableAsQueryString, (footerIndex) => (footerIndex + 1) % (getTableWidth(tableAsQueryString)));
 
     if (enableLogging) console.log("[log][main()] ended...");
