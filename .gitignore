@@ -1,3 +1,2 @@
-/.idea/
-/.gitignore
-/S4-WP-labs.iml
+**/.idea/
+*.iml
