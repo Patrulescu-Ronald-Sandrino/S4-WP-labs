@@ -5,8 +5,11 @@ $(function main() {
 
     buttonProceed.click(function () {
         console.log("clicked", buttonProceed);
-        console.log("value:", $("#textUsername").val()); // TODO send the username
-        // TODO: change to main
-        $.getJSON("service");
+
+        // TODO send/store/save the username
+        console.log("value:", $("#textUsername").val());
+        // $.getJSON("service");
+
+        location.href = "../ui/main.html";
     });
 });

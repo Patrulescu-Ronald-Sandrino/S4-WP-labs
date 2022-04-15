@@ -25,3 +25,6 @@
 
 
 //    console_log("this is a log test");
+
+
+echo (new DateTime())->format("Y-m-d H:i:s");
