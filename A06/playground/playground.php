@@ -27,4 +27,4 @@
 //    console_log("this is a log test");
 
 
-echo (new DateTime())->format("Y-m-d H:i:s");
+echo (new DateTime())->format("Y-m-d H:i:s"); // https://www.w3docs.com/snippets/php/how-to-get-the-current-date-and-time-in-php.html
