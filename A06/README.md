@@ -20,6 +20,15 @@ SCS network.
 
 Please make sure that you avoid sql-injection attacks when working with the database.
 
+Have in mind the user experience when you implement the problem:
+
+* add different validation logic for input fields
+* do not force the user to input an ID for an item if he wants to delete/edit/insert it; this should happen automatically (e.g. the user clicks an item from a list, and a page/modal prepopulated with the data for that particular item is opened, where the user can edit it)
+* add confirmation when the user deletes/cancels an item
+* do a bare minimum CSS that at least aligns the various input fields
+
+
+
 Documentation can be found at:
 1) http://www.cs.ubbcluj.ro/~forest/wp
 2) http://www.php.net/manual/en

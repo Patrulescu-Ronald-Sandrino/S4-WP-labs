@@ -2,7 +2,9 @@
 
 // https://www.sumologic.com/glossary/log-levels/
 // https://www.php.net/manual/en/language.enumerations.php
-enum LogLevel: string {
+namespace domain;
+enum LogLevel: string
+{
     case Emergency = "Emergency";
     case Alert = "Alert";
     case Critical = "Critical";

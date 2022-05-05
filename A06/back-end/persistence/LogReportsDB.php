@@ -1,5 +1,7 @@
-<!DOCTYPE html>
 <?php // TODO: remove later <!DOCTYPE html>
+
+use domain\LogLevel;
+use persistence\PDOConnection;
 
 include "PDOConnection.php";
 include "../domain/LogLevel.php";
@@ -16,8 +18,9 @@ class LogReportsDB
             $this->create(LogReportsDB::NUMBER_OF_GENERATED_ENTRIES);
         }
     }
-    
-    private function create(int $numberOfEntries) {
+
+    private function create(int $numberOfEntries)
+    {
         $connection = PDOConnection::create("test", "localhost", "root", "")->getConnection();
 
         /*
@@ -25,11 +28,11 @@ SELECT SCHEMA_NAME
 FROM INFORMATION_SCHEMA.SCHEMATA S
 WHERE S.SCHEMA_NAME = "test"
  */
-    /*    // https://stackoverflow.com/questions/5766218/how-can-i-get-a-list-of-mysql-databases-in-php-using-pdo
-    $result = $connection->query("SHOW DATABASES");
-    while (($dbname = $result->fetchColumn(0)) !== false) {
-        echo $dbname . '<br>';
-    }*/
+        /*    // https://stackoverflow.com/questions/5766218/how-can-i-get-a-list-of-mysql-databases-in-php-using-pdo
+        $result = $connection->query("SHOW DATABASES");
+        while (($dbname = $result->fetchColumn(0)) !== false) {
+            echo $dbname . '<br>';
+        }*/
 
 
         $connection->exec("DROP DATABASE IF EXISTS $this->database");
@@ -51,23 +54,24 @@ WHERE S.SCHEMA_NAME = "test"
     message TEXT(30)
 )") . '<br>';
 
-        self::insertGeneratedValuesIntoLogReports($connection,  $numberOfEntries);
+        self::insertGeneratedValuesIntoLogReports($connection, $numberOfEntries);
 
         // print the inserted values
-        $result = $connection->query('SELECT * FROM LogReports');
-        while ($row = $result->fetch()) {
-
-//            echo $row['level'], " ", $row['date'], " ", $row['username'], " ", $row['message'] . "<br>";
-//            printf("%'_-15s%'_-25s%'_-15s%s<br>", $row['level'], $row['date'], $row['username'], $row['message']); //
-            printf("<pre>%' -15s%' -25s%' -15s%s</pre>", $row['level'], $row['date'], $row['username'], $row['message']); // https://stackoverflow.com/questions/5515632/php-insert-multiple-spaces
-        }
+//        $result = $connection->query('SELECT * FROM LogReports');
+//        while ($row = $result->fetch()) {
+//
+////            echo $row['level'], " ", $row['date'], " ", $row['username'], " ", $row['message'] . "<br>";
+////            printf("%'_-15s%'_-25s%'_-15s%s<br>", $row['level'], $row['date'], $row['username'], $row['message']); //
+//            printf("<pre>%' -15s%' -25s%' -15s%s</pre>", $row['level'], $row['date'], $row['username'], $row['message']); // https://stackoverflow.com/questions/5515632/php-insert-multiple-spaces
+//        }
     }
 
-    static private function insertGeneratedValuesIntoLogReports(PDO $connection, int $last, int $first = 1) {
+    static private function insertGeneratedValuesIntoLogReports(PDO $connection, int $last, int $first = 1)
+    {
         $logLevels = array_column(LogLevel::cases(), 'value'); // https://stackoverflow.com/questions/71235907/getting-values-for-an-enum
         $logLevelsCount = count($logLevels);
 
-        for ($i = min($first, $last); $i <= max($first, $last); $i += ($last - $first)/abs($last - $first)) {
+        for ($i = min($first, $last); $i <= max($first, $last); $i += ($last - $first) / abs($last - $first)) {
             $level = $logLevels[rand(0, $logLevelsCount - 1)];
             $date = sprintf('2022-%02d-%02d %02d:%02d:%02d', rand(1, 12), rand(1, 28), rand(0, 23), rand(0, 59), rand(0, 59)); // https://www.geeksforgeeks.org/format-a-number-with-leading-zeros-in-php/, https://www.w3schools.com/PHP/func_math_rand.asp
             $username = "username " . $i;
@@ -83,27 +87,29 @@ WHERE S.SCHEMA_NAME = "test"
         }
     }
 
-    public function addLogReport(LogLevel $logLevel, string $username, string $message)
+    public function addLogReport(LogLevel $logLevel, string $username, string $message): bool
     {
         $connection = PDOConnection::create($this->database)->getConnection();
 //        $operation = 'INSERT INTO LogReports VALUES (?,  CURRENT_TIMESTAMP, ?, ?)'; // https://learnsql.com/cookbook/how-to-get-the-current-date-and-time-in-mysql/
 //        $connection->prepare($operation)->execute([$logLevel->value, $username, $message]);
-        $connection->prepare(LogReportsDB::INSERT_STATEMENT)->execute([$logLevel->value, (new DateTime())->format("Y-m-d H:i:s"), $username, $message]);
+        return $connection->prepare(LogReportsDB::INSERT_STATEMENT)->execute([$logLevel->value, (new DateTime())->format("Y-m-d H:i:s"), $username, $message]);
     }
 
-    public function removeLogReport(int $id) {
+    public function removeLogReport(int $id)
+    {
         $connection = PDOConnection::create($this->database)->getConnection();
         $operation = 'DELETE FROM LogReports WHERE id = ?';
         $connection->prepare($operation)->execute([$id]);
     }
 
-    public function getLogReports() {
+    public function getLogReports()
+    {
         // TODO
         // TODO: MAYBE create a LogReport class inside ? domain
     }
 }
 
 
-$logReportsDB = new LogReportsDB(true);
-$logReportsDB->addLogReport(LogLevel::Debug, "cde", "fgh");
-$logReportsDB->removeLogReport(3);
+//$logReportsDB = new LogReportsDB(true);
+//$logReportsDB->addLogReport(LogLevel::Debug, "cde", "fgh");
+//$logReportsDB->removeLogReport(3);

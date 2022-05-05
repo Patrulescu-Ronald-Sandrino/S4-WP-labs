@@ -1,7 +1,9 @@
 <?php
 
 // https://www.atatus.com/blog/how-to-log-to-console-in-php-and-why-should-you-do-it/
-function console_log($output, bool $with_script_tags = true) {
+// works only if called in a html file
+function console_log($output, bool $with_script_tags = true): void
+{
     $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . ');';
 //    $content = json_encode($output, JSON_HEX_TAG);
     if ($with_script_tags) {

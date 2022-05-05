@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 
 
@@ -27,4 +28,8 @@
 //    console_log("this is a log test");
 
 
-echo (new DateTime())->format("Y-m-d H:i:s"); // https://www.w3docs.com/snippets/php/how-to-get-the-current-date-and-time-in-php.html
+//echo (new DateTime())->format("Y-m-d H:i:s"); // https://www.w3docs.com/snippets/php/how-to-get-the-current-date-and-time-in-php.html
+
+// https://www.w3schools.com/php/php_arrays_associative.asp
+$age = array("Peter"=>"35", "Ben"=>"37", "Joe"=>"43", 2 => 17);
+echo "Peter is " . $age['Peter'] . " years old." . $age[2];
