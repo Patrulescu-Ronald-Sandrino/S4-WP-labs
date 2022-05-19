@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 use domain\LogLevel;
 
@@ -11,7 +12,7 @@ class Controller
 
     public function __construct()
     {
-        $this->logReportsDB = new LogReportsDB(true);
+        $this->logReportsDB = new LogReportsDB(false);
     }
 
 
@@ -30,8 +31,9 @@ class Controller
                     error_log("[Controller.service()] case 'add'");
                     error_log("json_encode(\$this->getLogLevels())=".json_encode($this->getLogLevels()));
                     error_log("json_encode(\$_GET[username])=".$_GET['username']);
-                    error_log('json_encode($this->add($_GET[username], $_GET[level], $_GET[message]))=' . json_encode($this->add($_GET['username'], $_GET['level'], $_GET['message'])));
-                    return json_encode($this->add($_GET['username'], $_GET['level'], $_GET['message']));
+                    $result = $this->add($_GET['username'], $_GET['level'], $_GET['message']);
+                    error_log('json_encode($this->add($_GET[username], $_GET[level], $_GET[message]))=' . json_encode($result));
+                    return json_encode($result);
                 }
                 default: {
                     $result = "[Controller.service()] NOT HANDLED value for \$_GET[action]=$_GET[action]";

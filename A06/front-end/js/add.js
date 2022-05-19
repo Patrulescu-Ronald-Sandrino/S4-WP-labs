@@ -5,8 +5,11 @@ function displayAddResult(message) {
 }
 
 $(function main() {
+    checkLogIn();
+
     const apiUrl = "../../back-end/service/Controller.php";
     document.body.appendChild(getBackButton()); // https://www.hongkiat.com/blog/jquery-insert-element-part1/
+    document.body.appendChild(getResultDiv());
 
     // add options in select
     $.getJSON(
@@ -27,11 +30,11 @@ $(function main() {
     $(document).on('submit', '#formAdd', function () {
         const level = $("#selectLevel").find(":selected").text();
         const message = $("#addTextArea").get(0).value;
+        const username = getUsernameSynchronously();
 
-        console.log(`buttonAdd clicked with username: ${"TODO"} level: ${level} message: ${message}`);
-
+        console.log(`buttonAdd clicked with username: ${username} level: ${level} message: ${message}`);
         $.getJSON(apiUrl,
-            {action: "add", username: "HARD-CODED USERNAME", level: level, message: message},
+            {action: "add", username: username, level: level, message: message},
             displayAddResult);
 
         return false;
@@ -82,6 +85,4 @@ $(function main() {
     //     //     }
     //     //    );
     // });
-
-    document.body.appendChild(getResultDiv());
 });

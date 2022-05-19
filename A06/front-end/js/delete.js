@@ -1,4 +1,5 @@
 $(function main() {
+    checkLogIn();
     document.body.appendChild(getBackButton());
 
     $("#buttonDelete").click(function () {

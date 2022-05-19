@@ -5,3 +5,7 @@
    2. user's own reports
    3. all reports
    4. delete his own reports
+
+
+# MAYBE
+1. get the username using the session instead of sending it

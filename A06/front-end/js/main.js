@@ -31,24 +31,7 @@ $(function main() {
             console.log('b = ', b);
             console.log('c = ', c);
         });
-    })
-
-    $.get(
-        "../../back-end/service/session.php",
-        {action: 'getUsername'},
-        function (data) {
-            if (data === "") {
-                location.href = "../ui/welcome.html";
-            }
-            else {
-                console.log(`[log][main.js] username: ${data}`);
-            }
-        }
-    )
-    .fail(function (a, b, c) {
-        console.log(`[log][main.js] failed to get username:`);
-        console.log('a = ', a);
-        console.log('b = ', b);
-        console.log('c = ', c);
     });
+
+    checkLogIn();
 });
