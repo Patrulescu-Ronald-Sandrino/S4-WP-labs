@@ -13,12 +13,14 @@ $(function main() {
             {action: 'start', username: username},
             function (data) {
                 console.log(`[log] buttonProceed clicked: set username to ${data}`);
+                location.href = "../ui/main.html";
             }
             );
         result.fail(function (a, b,c ) {
             console.log("post failed:", a, b, c);
+            alert("Failed to send username to backend");
         });
 
-        location.href = "../ui/main.html";
+
     });
 });
