@@ -29,11 +29,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo "logout status: username was NOT set";
             }
         }
-        else if ($_POST['action'] == 'test') {
-            echo 'test OK';
-        }
     }
     case 'GET': {
-
+        if (isset($_GET['action']) &&  $_GET['action'] == 'getUsername') {
+            echo isset($_SESSION) && isset($_SESSION['username']) ? $_SESSION['username'] : "";
+        }
     }
 }
