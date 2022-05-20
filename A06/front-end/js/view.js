@@ -42,13 +42,11 @@ $(function main() {
         insertLogsByShowingMode();
     });
 
-    // TODO: remove on delete key + confirmation dialog
-
-    callBackOnGetLogReports(data => {
-        console.log(data);
-        console.log(data[0]);
-        console.log(data[0]['id']);
-    });
+    // callBackOnGetLogReports(data => {
+    //     console.log(data);
+    //     console.log(data[0]);
+    //     console.log(data[0]['id']);
+    // });
 
     showingMode = 'all';
     insertLogsByShowingMode();
@@ -56,7 +54,7 @@ $(function main() {
 
 function insertLogsByShowingMode() {
     callBackOnGetLogReports((allLogs) => {
-        const currentTableBody = $('#logTableBody')[0];
+        const currentTableBody = getTableBody();
         const newTableBody = document.createElement('tbody');
         newTableBody.id = currentTableBody.id;
 
@@ -66,10 +64,10 @@ function insertLogsByShowingMode() {
             case 'all': newLogs = allLogs; break;
             case 'mine': {
                 const username = getUsernameSynchronously();
-                newLogs = filterLogs(allLogs, log => log['username'] = username);
+                newLogs = filterLogs(allLogs, log => log['username'] === username);
                 break;
             }
-            case 'byLevel': newLogs = filterLogs(allLogs, log => log['level'] = $("#selectLogLevel").val()); break;
+            case 'byLevel': newLogs = filterLogs(allLogs, log => log['level'] === $("#selectLogLevel").val()); break;
             default: console.log('[log][view.js][insertLogsByShowingMode()] not a valid showingMode'); return;
         }
         console.log(`[log][view.js][insertLogsByShowingMode()] newLogs = `, newLogs);
@@ -79,20 +77,56 @@ function insertLogsByShowingMode() {
 }
 
 function insertLogsInTableBody(newTableBody, newLogs) {
-    console.log(`[log][view.js][insertData()] newLogs = `, newLogs);
     const numberOfLogs = newLogs.length;
     const numberOfPages = Math.ceil(numberOfLogs / PAGE_SIZE);
     lastPage = numberOfPages - 1;
-    console.log(`[log][view.js][insertData()] numberOfLogs = `, numberOfLogs, `numberOfPages = `, numberOfPages);
-    // TODO
-    for (let log of newLogs) {
+    console.log(`[log][view.js][insertData()] numberOfLogs = `, numberOfLogs, `numberOfPages = `, numberOfPages, 'currentPage (0-indexing) = ', currentPage);
+    const username = getUsernameSynchronously();
+
+    const startIndex = currentPage * PAGE_SIZE;
+    const endIndexExclusive = startIndex + PAGE_SIZE;
+    // console.log(newLogs.slice(startIndex, endIndexExclusive));
+    for (const [index, log] of newLogs.slice(startIndex, endIndexExclusive).entries()) { // https://stackoverflow.com/questions/10179815/get-loop-counter-index-using-for-of-syntax-in-javascript
+        // console.log(index, log);
         let newRow = newTableBody.insertRow();
+        let newColumn = newRow.insertCell();
+        newColumn.appendChild(document.createTextNode((startIndex + index + 1)));
 
-    }
-    for (const [index, log] of newLogs.entries()) { // https://stackoverflow.com/questions/10179815/get-loop-counter-index-using-for-of-syntax-in-javascript
-        // TODO: only for the current page
+        Object.values(log).slice(1).forEach(value => {
+            let newColumn = newRow.insertCell();
+            newColumn.appendChild(document.createTextNode(value.toString()));
+        });
+
+        // a new node, on click, callback with parameter log['id']
+        if (log['username'] === username) {
+            // let deleteButton = $(document.createElement('button'));
+            let deleteButton = document.createElement('button');
+            deleteButton.innerText = "Delete";
+            deleteButton.onclick = () => {
+                let id = log['id'];
+                $.getJSON(apiUrl,
+                    {action: "remove", id: id}, () => {
+                    insertLogsByShowingMode();
+                });
+            };
+
+            // deleteButton.onclick = () => {
+            //     let id = log['id'];
+            //     $.getJSON(apiUrl,
+            //         {action: "remove", id: id},
+            //         () => {
+            //             insertLogsByShowingMode();
+            // };
+            let newColumn = newRow.insertCell();
+            newColumn.appendChild(deleteButton);
+        }
+
+        newTableBody.append(newRow);
+        // Object.values(log).forEach(x => console.log(x));
     }
 
+    $('#tableNextPage').prop('disabled', currentPage === lastPage);
+    $('#tablePreviousPage').prop('disabled', currentPage === 0);
 }
 
 const getTableBody = () => $("#logTableBody")[0];
@@ -114,6 +148,9 @@ function addLogLevelsToSelect() {
             data.forEach(logLevel => {
                 selectLevel.append(`<option value="${logLevel}">${logLevel}</option>`);
             });
+            // $('#selectLogLevel option').last().attr('selected', true);
+            // console.log($('#selectLogLevel option:selected'));
+            // console.log($('#selectLogLevel option').removeAttr('selected'));
         });
 }
 
