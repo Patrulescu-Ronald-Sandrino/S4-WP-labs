@@ -27,13 +27,19 @@ class Controller
 //                    error_log("json_encode(\$this->getLogLevels())=".json_encode($this->getLogLevels()));
                     return json_encode($this->getLogLevels());
                 }
-                case 'add' : {
+                case 'add': {
                     error_log("[Controller.service()] case 'add'");
                     error_log("json_encode(\$this->getLogLevels())=".json_encode($this->getLogLevels()));
                     error_log("json_encode(\$_GET[username])=".$_GET['username']);
                     $result = $this->add($_GET['username'], $_GET['level'], $_GET['message']);
                     error_log('json_encode($this->add($_GET[username], $_GET[level], $_GET[message]))=' . json_encode($result));
                     return json_encode($result);
+                }
+                case 'remove': {
+                    $this->logReportsDB->removeLogReport($_GET['id']);
+                }
+                case 'getAll': {
+                    return $this->logReportsDB->getLogReports();
                 }
                 default: {
                     $result = "[Controller.service()] NOT HANDLED value for \$_GET[action]=$_GET[action]";

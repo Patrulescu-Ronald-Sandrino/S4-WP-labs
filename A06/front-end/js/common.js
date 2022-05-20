@@ -19,18 +19,22 @@ function getResultDiv(message = "") {
     return div;
 }
 
+function showFailOutputWithMessage(message) {
+    return function (a, b, c) {
+        console.log(message);
+        console.log('a = ', a);
+        console.log('b = ', b);
+        console.log('c = ', c);
+    };
+}
+
 function getUsernameWithCallback(callback) {
     $.get(
         "../../back-end/service/session.php",
         {action: 'getUsername'},
         callback
     )
-        .fail(function (a, b, c) {
-            console.log(`[log][getUsername()] failed to get username:`);
-            console.log('a = ', a);
-            console.log('b = ', b);
-            console.log('c = ', c);
-        });
+    .fail(showFailOutputWithMessage(`[log][getUsername()] failed to get username:`));
 }
 
 

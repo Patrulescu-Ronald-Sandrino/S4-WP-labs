@@ -66,7 +66,7 @@ WHERE S.SCHEMA_NAME = "test"
 //        }
     }
 
-    static private function insertGeneratedValuesIntoLogReports(PDO $connection, int $last, int $first = 1)
+    static private function insertGeneratedValuesIntoLogReports(PDO $connection, int $last, int $first = 1): void
     {
         $logLevels = array_column(LogLevel::cases(), 'value'); // https://stackoverflow.com/questions/71235907/getting-values-for-an-enum
         $logLevelsCount = count($logLevels);
@@ -95,17 +95,18 @@ WHERE S.SCHEMA_NAME = "test"
         return $connection->prepare(LogReportsDB::INSERT_STATEMENT)->execute([$logLevel->value, (new DateTime())->format("Y-m-d H:i:s"), $username, $message]);
     }
 
-    public function removeLogReport(int $id)
+    public function removeLogReport(int $id): void
     {
         $connection = PDOConnection::create($this->database)->getConnection();
         $operation = 'DELETE FROM LogReports WHERE id = ?';
         $connection->prepare($operation)->execute([$id]);
     }
 
-    public function getLogReports()
+    public function getLogReports(): bool|array
     {
-        // TODO
-        // TODO: MAYBE create a LogReport class inside ? domain
+        $connection = PDOConnection::create($this->database)->getConnection();
+        $statement = $connection->query("SELECT * FROM LogReports");
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 
