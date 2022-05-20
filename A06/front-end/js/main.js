@@ -22,7 +22,7 @@ $(function main() {
             {action: 'logout'},
             function (data) {
                 console.log(`[log][main.js][#buttonLogOut.click()] POST logout result: `, data);
-                location.href = "../ui/welcome.html";
+                location.href = "../ui/goodbye.html";
             }
         )
         .fail(function (a, b, c) {
