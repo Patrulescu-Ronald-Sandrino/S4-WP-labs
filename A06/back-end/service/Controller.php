@@ -39,7 +39,7 @@ class Controller
                     $this->logReportsDB->removeLogReport($_GET['id']);
                 }
                 case 'getAll': {
-                    return $this->logReportsDB->getLogReports();
+                    return json_encode($this->logReportsDB->getLogReports());
                 }
                 default: {
                     $result = "[Controller.service()] NOT HANDLED value for \$_GET[action]=$_GET[action]";

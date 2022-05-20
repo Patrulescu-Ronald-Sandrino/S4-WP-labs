@@ -9,6 +9,30 @@
     <link rel="stylesheet" href="../style/common.css" />
 </head>
 <body>
-    <div id="container"></div>
+    <div id="container">
+        <table id="logTable" border="1">
+            <thead>
+            <tr>
+                <th>Nr</th>
+                <th>Level</th>
+                <th>Date</th>
+                <th>Username</th>
+                <th>Message</th>
+            </tr>
+            </thead>
+            <tbody id="logTableBody">
+            </tbody>
+        </table>
+        <button id="tablePreviousPage">Previous Page</button>
+        <button id="tableNextPage">Next Page</button>
+        <br>
+        <button id="tableShowAll">Show all</button>
+        <button id="tableShowMine">Show mine</button>
+        <form id="formLogLevel">
+            <label for="selectLogLevel">Level: </label>
+            <select id="selectLogLevel"></select>
+        </form>
+<!--      TODO: add select for log level  -->
+    </div>
 </body>
 </html>
