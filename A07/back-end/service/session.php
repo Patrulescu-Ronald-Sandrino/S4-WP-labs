@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: ");
 session_start();
 
 error_log("\$_SERVER['REQUEST_METHOD']=" . json_encode($_SERVER['REQUEST_METHOD']));
