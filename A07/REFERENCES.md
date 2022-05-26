@@ -1,0 +1,1 @@
+1. echo json_encode($_POST); //  json_encode() because 'Array to string conversion '

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add log report</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/add.js"></script>
+    <link rel="stylesheet" href="../style/common.css" />
+</head>
+<body>
+<form action="" id="formAdd">
+    <label for="selectLevel">Level: </label>
+    <select required name="level" id="selectLevel"></select>
+    <br>
+    <label for="addTextArea">Message:<br></label>
+    <textarea required id="addTextArea" rows="5" cols="10" name="message" placeholder="Enter the log report message:"></textarea><br>
+    <input type="submit" value="Add" id="buttonAdd">
+</form>
+</body>
+</html>
