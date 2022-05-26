@@ -7,10 +7,13 @@ error_log("\$_REQUEST=" . json_encode($_REQUEST));
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST': {
+        if (!isset($_POST['action'])) {
+            break;
+        }
         if ($_POST['action'] == 'login') {
             $_SESSION['username'] = $_POST['data'];
             error_log("${_POST['data']} logged in");
-            echo "${_POST['data']} logged in";
+            echo json_encode((object)["result" => "${_POST['data']} logged in"]); // php create json object https://stackoverflow.com/a/39053149/17299754
         }
         else if ($_POST['action'] == 'logout') {
             if (isset($_SESSION['username'])) {
